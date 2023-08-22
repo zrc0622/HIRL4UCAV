@@ -22,11 +22,11 @@ class DemoEnv():
         self.now_missile_state = False # gai 导弹此时是否发射（本次step是否发射了导弹）
         self.missile1_state = True # gai 导弹1是否存在
         self.n_missile1_state = True
-        self.missile2_state = True # gai 导弹1是否存在
+        self.missile2_state = True # gai 导弹2是否存在
         self.n_missile2_state = True
-        self.missile3_state = True # gai 导弹1是否存在
+        self.missile3_state = True # gai 导弹3是否存在
         self.n_missile3_state = True
-        self.missile4_state = True # gai 导弹1是否存在
+        self.missile4_state = True # gai 导弹4是否存在
         self.n_missile4_state = True
         self.missile = df.get_machine_missiles_list(self.Plane_ID_ally) # gai 导弹列表
         self.missile1_id = self.missile[0]

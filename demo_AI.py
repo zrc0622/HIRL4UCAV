@@ -25,6 +25,8 @@ state_dim = state.shape[0]
 action_dim = 4
 state_list = []
 action_list = []
+temp_state_list = [] # 通过临时state-action删去无效轨迹
+temp_action_list = []
 
 df.activate_IA(plane_id)
 
@@ -32,27 +34,33 @@ episode = 0
 step = 0
 episode_step = 0
 health = env._get_health()
+invalid_data = 0
 while episode <= 49:
     while health > 0:
         time.sleep(1/20)
         state = env._get_observation()
-        state_list.append(state) 
+        temp_state_list.append(state) 
         df.update_scene()
         action = env._get_action()
-        action_list.append(action)
+        temp_action_list.append(action)
         health = env._get_health()
         step += 1
         episode_step += 1
-        if episode_step > 5000:
+        if episode_step > 4000:
+            invalid_data += 1
+            step -= episode_step
             break
-    print(f"episode = {episode}   step = {episode_step}")
+    if episode_step <= 4000:
+        state_list.extend(temp_state_list)
+        action_list.extend(temp_action_list)
+    print(f"episode = {episode}  step = {episode_step}  ")
     env.reset()
     df.activate_IA(plane_id)
     health = env._get_health()
     episode_step = 0
     episode += 1
 
-print("episode", episode, " step", step, " state dim", state_dim)
+print("episode", episode, " step", step, " state dim", state_dim, " invalid date", invalid_data)
 
 action_array = np.array(action_list)
 state_array = np.array(state_list)
