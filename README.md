@@ -21,10 +21,10 @@
 
 ## Rule-based
 * run demo.py file which will then generate a pkl file named "expert_data"
-* video</br>[![Watch the video](http://img.youtube.com/vi/i6DAneyneh8/0.jpg)](https://www.youtube.com/watch?v=i6DAneyneh8 "YOUR_VIDEO_TITLE")
+* video</br>[![Watch the video](http://img.youtube.com/vi/i6DAneyneh8/0.jpg)](https://www.youtube.com/watch?v=i6DAneyneh8 "Rule-based expert demo")
 ## AI-based
 * run demo_AI.py file which will then generate a pkl file named "expert_data_new"
-* video</br>[![Watch the video](http://img.youtube.com/vi/uQKoI0rQC2k/0.jpg)](https://www.youtube.com/watch?v=uQKoI0rQC2k "YOUR_VIDEO_TITLE")
+* video</br>[![Watch the video](http://img.youtube.com/vi/uQKoI0rQC2k/0.jpg)](https://www.youtube.com/watch?v=uQKoI0rQC2k "AI-based expert demo")
 # Data Description
 ## expert_data_new.pkl
 * 基于AI的agent生成的“追逐敌机并发射导弹将敌机击落”的轨迹，可用于imitation learning
