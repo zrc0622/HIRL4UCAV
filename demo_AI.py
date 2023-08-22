@@ -30,6 +30,7 @@ df.activate_IA(plane_id)
 
 episode = 0
 step = 0
+episode_step = 0
 health = env._get_health()
 while episode <= 49:
     while health > 0:
@@ -41,10 +42,14 @@ while episode <= 49:
         action_list.append(action)
         health = env._get_health()
         step += 1
-    print(step)
+        episode_step += 1
+        if episode_step > 5000:
+            break
+    print(f"episode = {episode}   step = {episode_step}")
     env.reset()
     df.activate_IA(plane_id)
     health = env._get_health()
+    episode_step = 0
     episode += 1
 
 print("episode", episode, " step", step, " state dim", state_dim)

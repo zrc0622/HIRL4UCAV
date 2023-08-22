@@ -30,7 +30,7 @@ class DemoEnv():
         self.n_missile4_state = True
         self.missile = df.get_machine_missiles_list(self.Plane_ID_ally) # gai 导弹列表
         self.missile1_id = self.missile[0]
-        self.oppo_health = 1 # gai health_level
+        self.oppo_health = 0.6 # gai health_level
 
     def reset(self):  # reset simulation beginning of episode
         self.done = False
@@ -118,8 +118,8 @@ class DemoEnv():
     def _reset_machine(self):
         df.reset_machine("ally_1")
         df.reset_machine("ennemy_2")
-        df.set_health("ennemy_2", 1)
-        self.oppo_health = 1 # gai
+        df.set_health("ennemy_2", 0.6)
+        self.oppo_health = 0.6 # gai
         x = random.randint(-1000, 1000)
         y = random.randint(2000, 4000)
         z = random.randint(1000, 3000)
