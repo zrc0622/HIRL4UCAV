@@ -9,7 +9,7 @@ time.sleep(2) # 等待连接
 df.disable_log() # 关闭日志？
 render = False
 df.set_renderless_mode(render) # 开启渲染模式
-df.set_client_update_mode(True) # 通过update_scene()更新场景
+df.set_client_update_mode(True) # 确保数据传输正确
 planes = df.get_planes_list()
 
 plane_id = planes[0]
