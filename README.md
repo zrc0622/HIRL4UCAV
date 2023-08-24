@@ -21,7 +21,7 @@
 
 ## Rule-based
 * run demo.py file which will then generate a pkl file named "expert_data"
-* video</br>[![rule-based expert demo](https://github.com/zrc0622/harfang-sandbox/blob/master/pictures/1.jpg)](https://www.youtube.com/watch?v=i6DAneyneh8 "rule-based expert demo")
+* video</br>[![rule-based expert demo](<img src="https://github.com/zrc0622/harfang-sandbox/blob/master/pictures/1.jpg" width="210px">)](https://www.youtube.com/watch?v=i6DAneyneh8 "rule-based expert demo") 
 ## AI-based
 * run demo_AI.py file which will then generate a pkl file named "expert_data_new"
 * video</br>[![AI-based expert demo](https://github.com/zrc0622/harfang-sandbox/blob/master/pictures/3.jpg)](https://www.youtube.com/watch?v=uQKoI0rQC2k "AI-based expert demo")
