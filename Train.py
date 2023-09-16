@@ -16,15 +16,22 @@ from pathlib import Path
 
 from plot import draw_dif, draw_pos
 
+def save_parameters_to_txt(log_dir, **kwargs):
+    # os.makedirs(log_dir)
+    filename = os.path.join(log_dir, "log1.txt")
+    with open(filename, 'w') as file:
+        for key, value in kwargs.items():
+            file.write(f"{key}={value}\n")
+
 print(torch.cuda.is_available())
 
-df.connect("10.241.58.126", 50888) #TODO:Change IP and PORT values
+df.connect("10.243.58.131", 50888) #TODO:Change IP and PORT values
 
 start = time.time() #STARTING TIME
 df.disable_log()
 
 # PARAMETERS
-trainingEpisodes = 1000
+trainingEpisodes = 6000
 validationEpisodes = 100
 explorationEpisodes = 200
 
@@ -32,8 +39,7 @@ Test = False
 if Test:
     render = False
 else:
-    render = False
-# render = True
+    render = True
     
 df.set_renderless_mode(render)
 df.set_client_update_mode(True)
@@ -43,13 +49,14 @@ gamma = 0.99
 criticLR = 1e-3
 actorLR = 1e-3
 tau = 0.005
-checkpointRate = 50
+checkpointRate = 100
 highScore = -math.inf
 successRate = -math.inf
 batchSize = 128
 maxStep = 6000
-hiddenLayer1 = 128
-hiddenLayer2 = 256
+validatStep = 15000
+hiddenLayer1 = 256
+hiddenLayer2 = 512
 stateDim = 14 # gai
 actionDim = 4 # gai
 useLayerNorm = True
@@ -59,18 +66,22 @@ name = "Harfang_GYM"
 
 #INITIALIZATION
 env = HarfangEnv()
+
 agent = Agent(actorLR, criticLR, stateDim, actionDim, hiddenLayer1, hiddenLayer2, tau, gamma, bufferSize, batchSize, useLayerNorm, name)
 
 start_time = datetime.datetime.now()
 dir = Path.cwd() # 获取工作区路径
-log_dir = str(dir) + "\\" + "runs\\" + str(start_time.year)+'_'+str(start_time.month)+'_'+str(start_time.day)+'_'+str(start_time.hour)+'_'+str(start_time.minute) # tensorboard文件夹路径
+log_dir = str(dir) + "\\" + "new_runs\\" + str(start_time.year)+'_'+str(start_time.month)+'_'+str(start_time.day)+'_'+str(start_time.hour)+'_'+str(start_time.minute) # tensorboard文件夹路径
 plot_dir = log_dir + "\\" + "plot"
 os.makedirs(log_dir, exist_ok=True)
 os.makedirs(plot_dir, exist_ok=True)
 
+save_parameters_to_txt(log_dir=log_dir,bufferSize=bufferSize,criticLR=criticLR,actorLR=actorLR,batchSize=batchSize,maxStep=maxStep,validatStep=validatStep,hiddenLayer1=hiddenLayer1,hiddenLayer2=hiddenLayer2)
+env.save_parameters_to_txt(log_dir)
+
 writer = SummaryWriter(log_dir)
-arttir = 0
-agent.loadCheckpoints("Agent_") # 使用未添加导弹的结果进行训练
+arttir = 1
+# agent.loadCheckpoints(f"Agent{arttir-1}_") # 使用未添加导弹的结果进行训练
 
 if not Test:
     # RANDOM EXPLORATION
@@ -83,6 +94,7 @@ if not Test:
                 action = env.action_space.sample()                
 
                 n_state,reward,done, info = env.step(action)
+                # print(n_state)
                 if step is maxStep-1:
                     done = True
                 agent.store(state,action,n_state,reward,done)
@@ -144,7 +156,7 @@ if not Test:
                 state = env.reset()
                 totalReward = 0
                 done = False
-                for step in range(maxStep):
+                for step in range(validatStep):
                     if not done:
                         action = agent.chooseActionNoNoise(state)
                         n_state, reward, done, info = env.step(action)
@@ -159,23 +171,28 @@ if not Test:
                             self_pos.append(env.get_pos())
                             oppo_pos.append(env.get_oppo_pos())
                     if done:
-                        if env.loc_diff < 300:
+                        if env.loc_diff < 300: # 改
                             success += 1
                         break
 
                 valScores.append(totalReward)
 
             if mean(valScores) > highScore or success/validationEpisodes > successRate:
-                agent.saveCheckpoints("Agent{}_".format(arttir))
-                if mean(valScores) > highScore:
+                if mean(valScores) > highScore: # 总奖励分数
                     highScore = mean(valScores)
-                if success / validationEpisodes > successRate:
+                    agent.saveCheckpoints("Agent{}_score{}".format(arttir, highScore))
+                    draw_dif(f'dif_{arttir}.pdf', dif, plot_dir)
+                    draw_pos(f'pos_{arttir}.pdf', self_pos, oppo_pos, plot_dir) 
+
+                elif success / validationEpisodes > successRate: # 追逐成功率
                     successRate = success / validationEpisodes
+                    agent.saveCheckpoints("Agent{}_successRate{}".format(arttir, successRate))
+                    draw_dif(f'dif_{arttir}.pdf', dif, plot_dir)
+                    draw_pos(f'pos_{arttir}.pdf', self_pos, oppo_pos, plot_dir)
         
             arttir += 1
-            draw_dif(f'dif_{episode}.pdf', dif, plot_dir)
-            draw_pos(f'pos_{episode}.pdf', self_pos, oppo_pos, plot_dir)
-            print('Validation Episode: ', (episode//checkpointRate)+1, ' Average Reward:', mean(valScores))
+
+            print('Validation Episode: ', (episode//checkpointRate)+1, ' Average Reward:', mean(valScores), ' Success Rate:', successRate)
             writer.add_scalar('Validation/Avg Reward', mean(valScores), episode)
             writer.add_scalar('Validation/Success Rate', success/validationEpisodes, episode)
 else:
@@ -184,11 +201,11 @@ else:
         state = env.reset()
         totalReward = 0
         done = False
-        for step in range(maxStep):
+        for step in range(validatStep):
             if not done:
                 action = agent.chooseActionNoNoise(state)
                 n_state,reward,done, info  = env.step(action)
-                if step is maxStep - 1:
+                if step is validatStep - 1:
                     done = True
 
                 state = n_state
