@@ -13,7 +13,7 @@
 ## Models and Results
 The best models trained by BC、TD3、SAC、E-SAC、HIRL (our method) are stored in the `./results` folder. The validation results of the models are as follows (validation results without random initialization and with random initialization are obtained by running 50 episodes with 5 different random seeds, '±' indicates standard deviation; the number of hits and launches are obtained by running 10 episodes; the best results are highlighted in bold).
 ### Validation Results without Random Initialization
-| **Algorithm**              | **Shoot-down Success Rate**        | **Hit Success Rate**        | **Rewards**           |
+| **Methods**              | **Shoot-down Success Rate**        | **Hit Success Rate**        | **Rewards**           |
 |:-----------------:|:-----------------:|:-----------------:|:-----------------:|
 | HIRL (adaptive)  | **100.0% ± 0.0%**     | **100.0% ± 0.0%**     | **-680.8 ± 6.7**      |
 | HIRL (linear)    | **100.0% ± 0.0%**     | **100.0% ± 0.0%**    | -953.9 ± 13.8     |
@@ -22,7 +22,7 @@ The best models trained by BC、TD3、SAC、E-SAC、HIRL (our method) are stored
 | SAC             | **100.0% ± 0.0%**     | 0.0% ± 0.0%       | -2985.7 ± 0.0     |
 | BC              | 62.8% ± 1.0%      | 62.8% ± 1.0%      | -12228.3 ± 880.2  |
 ### Validation Results with Random Initialization
-| **Algorithm**             | **Shoot-down Success Rate**       | **Hit Success Rate**       | **Rewards**               |
+| **Methods**             | **Shoot-down Success Rate**       | **Hit Success Rate**       | **Rewards**               |
 |:-----------------:|:----------------:|:----------------:|:---------------------:|
 | HIRL (adaptive)  | **98.0% ± 1.3%**     | **98.0% ± 1.3%**     | **-1436.0 ± 238.9**       |
 | HIRL (linear)    | 86.0% ± 5.4%     | 86.0% ± 5.4%     | -5800.8 ± 1420.3      |
@@ -32,7 +32,7 @@ The best models trained by BC、TD3、SAC、E-SAC、HIRL (our method) are stored
 | BC              | 22.4% ± 3.2%     | 22.4% ± 3.2%     | -20504.7 ± 1156.3     |
 
 ### Launch Efficiency Results
-| **Algorithm**             | **Hits/Launches** |
+| **Methods**             | **Hits / Launches** |
 |:-----------------:|:-----------------:|
 | HIRL (adaptive)  | **100.0%**          |
 | HIRL (linear)    | **100.0%**          |
