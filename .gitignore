@@ -6,5 +6,5 @@ logs1
 logs2
 logs3
 logs4
-__pycache__/
+**/__pycache__
 .vscode/
