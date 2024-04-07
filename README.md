@@ -5,8 +5,8 @@
 ## Result Charts
 
 <p float="left">
-  <img src="results/vr.png" width="48%" />
-  <img src="results/vsr.png" width="48%" />
+  <img src="results/vr_vsr.png" width="" />
+  <!-- <img src="results/vsr.png" width="48%" /> -->
 </p>
 
 
