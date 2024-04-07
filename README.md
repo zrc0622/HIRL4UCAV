@@ -42,7 +42,7 @@ The best models trained by BC、TD3、SAC、E-SAC、HIRL (our method) are stored
 
 
 ## Policy Display
-> Display the effectiveness of the policy trained by the HIRL algorithm.
+> Display the effectiveness of the policy trained by the HIRL.
 
 ### One Missile
 
@@ -102,20 +102,20 @@ The best models trained by BC、TD3、SAC、E-SAC、HIRL (our method) are stored
     cd source
     python main.py network_port 12345
     ```
-2. To test the BC, TD3, and HIRL methods, use the following command in the `HIRL4UCAV` folder (note to modify the IP number and the model name in the `train_all.py` (only the name before 'xxx_Harfang_GYM' is needed); use `--render` to enable test rendering).
+2. To test the BC, TD3, and HIRL models, use the following command in the `HIRL4UCAV` folder (note to modify the IP number and the model name in the `train_all.py` (only the name before 'xxx_Harfang_GYM' is needed); use `--render` to enable test rendering).
     ```bash
     # Sucess Rate Validation
-    # Add '--test --test_mode n' to the end of the corresponding training command. 'test mode 1' is the random initialization mode, 'test mode 2' is the infinite missiles mode, and 'test mode 3' is the original environment.
+    # Add '--test --test_mode n' to the end of the corresponding training command. 'test mode 1' is the random initialization mode, 'test mode 2' is the infinite missiles mode, and 'test mode 3' is the original environment
     # Here's an example
     python train_all.py --agent ROT --port 12345 --type soft --model_name srot --test --test_mode 1 --seed 1
     ```
     ```bash
     # Reward Validation
-    # Add '--test --test_mode n' to the end of the corresponding training command. 'test mode 4' is the random initialization mode, and 'test mode 5' is the original environment.
+    # Add '--test --test_mode n' to the end of the corresponding training command. 'test mode 4' is the random initialization mode, and 'test mode 5' is the original environment
     # Here's an example
     python train_all.py --agent ROT --port 12345 --type soft --model_name srot --test --test_mode 4 --seed 1
     ```
-3. To test the SAC and E-SAC methods, use the following command in the `HIRL4UCAV` folder (types of test mode are as described above).
+3. To test the SAC and E-SAC models, use the following command in the `HIRL4UCAV` folder (types of test mode are as described above).
     ```
     python validate_sac.py --test_mode 1 --port 12345 --seed 1 
     ```
