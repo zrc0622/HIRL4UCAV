@@ -139,7 +139,7 @@ def main(config):
     else:
         print('no rendering mode')
 
-    df.connect("10.243.58.131", port) #TODO:Change IP and PORT values
+    df.connect("10.241.58.131", port) #TODO:Change IP and PORT values
 
     start = time.time() #STARTING TIME
     df.disable_log()
@@ -178,7 +178,7 @@ def main(config):
     bc_actor_dir = 'models\\BC\\bc_1'
     bc_actor_name = 'Agent20_successRate0.64'
 
-    data_dir = './expert_data/expert_data_ai2.csv'
+    data_dir = './expert_data/expert_data_bc1.csv'
     data_folder_dir = './expert_data'
     expert_states, expert_actions = read_data(data_dir)
 
@@ -200,7 +200,7 @@ def main(config):
 
         start_time = datetime.datetime.now()
         dir = Path.cwd() # 获取工作区路径
-        log_dir = str(dir) + "\\" + "logs2\\" + agent_name + "\\" + model_name + "\\" + "log\\" + str(start_time.year)+'_'+str(start_time.month)+'_'+str(start_time.day)+'_'+str(start_time.hour)+'_'+str(start_time.minute) # tensorboard文件夹路径
+        log_dir = str(dir) + "\\" + "logs5\\" + agent_name + "\\" + model_name + "\\" + "log\\" + str(start_time.year)+'_'+str(start_time.month)+'_'+str(start_time.day)+'_'+str(start_time.hour)+'_'+str(start_time.minute) # tensorboard文件夹路径
         plot_dir = log_dir + "\\" + "plot"
         os.makedirs(log_dir, exist_ok=True)
         os.makedirs(plot_dir, exist_ok=True)
@@ -213,7 +213,7 @@ def main(config):
     
     arttir = 1
     if load_model or Test:
-        agent.loadCheckpoints(f"Agent24_0_-4707", model_dir)
+        agent.loadCheckpoints(f"Agent20_successRate0.64", model_dir)
 
     if not Test:
         if agent_name == 'BC':
