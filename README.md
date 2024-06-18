@@ -120,3 +120,13 @@ The best models trained by BC、TD3、SAC、E-SAC、HIRL (our method) are stored
     python validate_sac.py --test_mode 1 --port 12345 --seed 1 
     ```
 
+## Citation
+```
+@misc{li2024imitative,
+    title={An Imitative Reinforcement Learning Framework for Autonomous Dogfight}, 
+    author={Siyuan Li and Rongchang Zuo and Peng Liu and Yingnan Zhao},
+    year={2024},
+    eprint={2406.11562},
+    archivePrefix={arXiv}
+}
+```
