@@ -2,14 +2,14 @@ import torch
 import argparse
 import dogfight_client as df
 import time
-from Network.SAC.agent import SacAgent as SACAgent
+from agent.SAC.agent import SacAgent as SACAgent
 import math
-from Environment.HarfangEnv_GYM import *
+from environment.HarfangEnv_GYM import *
 import gym
 from pathlib import Path
 import datetime
 import csv
-from Tools.plot import draw_dif, draw_pos, plot_dif, plot_dif2, draw_pos2
+from utils.plot import draw_dif, draw_pos, plot_dif, plot_dif2, draw_pos2
 from statistics import mean
 from torch.utils.tensorboard import SummaryWriter
 from rltorch.memory import MultiStepMemory
@@ -101,6 +101,13 @@ def validate(validationEpisodes, env:HarfangEnv, validationStep, agent:SACAgent,
     tensor_writer.add_scalar('Validation/Success Rate', success/validationEpisodes, episode)
     return highScore, successRate
 
+def save_parameters_to_txt(log_dir, **kwargs):
+    # os.makedirs(log_dir)
+    filename = os.path.join(log_dir, "log1.txt")
+    with open(filename, 'w') as file:
+        for key, value in kwargs.items():
+            file.write(f"{key}={value}\n")
+
 def main(config):
     print('gpu is ' + str(torch.cuda.is_available()))
 
@@ -140,14 +147,16 @@ def main(config):
     action_space = gym.spaces.Box(low=np.array([-1.0] * actionDim), high=np.array([1.0] * actionDim), dtype=np.float64)
     useLayerNorm = True
 
-    bc_actor_dir = 'models\\BC\\bc_1'
+    bc_actor_dir = './models/BC/bc_1'
     bc_actor_name = 'Agent20_successRate0.64'
+
+    data_dir = './expert_data/expert_data_bc1.csv'
 
     name = 'Harfang_GYM'
 
     start_time = datetime.datetime.now()
     dir = Path.cwd()
-    log_dir = str(dir) + "\\" + "logs4\\" + "SAC\\" + model_name + "\\" + "log\\" + str(start_time.year)+'_'+str(start_time.month)+'_'+str(start_time.day)+'_'+str(start_time.hour)+'_'+str(start_time.minute)
+    log_dir = str(dir) + "/" + "logs/" + "SAC/" + model_name + "/" + "log/" + str(start_time.year)+'_'+str(start_time.month)+'_'+str(start_time.day)+'_'+str(start_time.hour)+'_'+str(start_time.minute)
 
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
@@ -156,6 +165,9 @@ def main(config):
 
     env = HarfangEnv()
     writer = agent.writer
+
+    save_parameters_to_txt(log_dir=log_dir,bufferSize=bufferSize,criticLR=criticLR,actorLR=actorLR,batchSize=batchSize,maxStep=maxStep,validationStep=validationStep,hiddenLayer1=hiddenLayer1,hiddenLayer2=hiddenLayer2,agent=agent,model_dir=agent.model_dir,data_dir=data_dir)
+    env.save_parameters_to_txt(log_dir)
 
     arttir = 1
 

@@ -70,15 +70,15 @@ The best models trained by BC、TD3、SAC、E-SAC、HIRL (our method) are stored
 2. In the `HIRL4UCAV` folder, use the following command to start training (note to modify the IP number in the `train_all.py`; use `--render` to enable training rendering, and use `--plot` to draw visualization results).
     ```bash
     # HIRL (adaptive)
-    python train_all.py --agent ROT --port 12345 --type soft --model_name srot
+    python train_all.py --agent HIRL --port 12345 --type soft --model_name s-HIRL
     ```
     ```bash
     # HIRL (linear)
-    python train_all.py --agent ROT --port 12345 --type linear --bc_weight 1 --model_name lrot
+    python train_all.py --agent HIRL --port 12345 --type linear --bc_weight 1 --model_name l-HIRL
     ```
     ```bash
     # HIRL (fixed)
-    python train_all.py --agent ROT --port 12345 --type fixed --bc_weight 0.5 --model_name frot
+    python train_all.py --agent HIRL --port 12345 --type fixed --bc_weight 0.5 --model_name f-HIRL
     ```
     ```bash
     # TD3
@@ -107,13 +107,13 @@ The best models trained by BC、TD3、SAC、E-SAC、HIRL (our method) are stored
     # Sucess Rate Validation
     # Add '--test --test_mode n' to the end of the corresponding training command. 'test mode 1' is the random initialization mode, 'test mode 2' is the infinite missiles mode, and 'test mode 3' is the original environment
     # Here's an example
-    python train_all.py --agent ROT --port 12345 --type soft --model_name srot --test --test_mode 1 --seed 1
+    python validate_all.py --agent HIRL --port 12345 --type soft --model_name s-HIRL --test --test_mode 1 --seed 1
     ```
     ```bash
     # Reward Validation
     # Add '--test --test_mode n' to the end of the corresponding training command. 'test mode 4' is the random initialization mode, and 'test mode 5' is the original environment
     # Here's an example
-    python train_all.py --agent ROT --port 12345 --type soft --model_name srot --test --test_mode 4 --seed 1
+    python validate_all.py --agent HIRL --port 12345 --type soft --model_name s-HIRL --test --test_mode 4 --seed 1
     ```
 3. To test the SAC and E-SAC models, use the following command in the `HIRL4UCAV` folder (types of test mode are as described above).
     ```

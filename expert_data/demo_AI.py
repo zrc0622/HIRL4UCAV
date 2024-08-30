@@ -1,6 +1,6 @@
 import dogfight_client as df
 import time
-from DemoEnvAi import *
+from DemoEnvAI import *
 import pickle
 import numpy as np
 import csv

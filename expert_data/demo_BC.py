@@ -2,14 +2,14 @@ import torch
 import argparse
 import dogfight_client as df
 import time
-from Network.SAC.agent import SacAgent as SACAgent
+from agent.SAC.agent import SacAgent as SACAgent
 import math
-from Environment.HarfangEnv_GYM import *
+from environment.HarfangEnv_GYM import *
 import gym
 from pathlib import Path
 import datetime
 import csv
-from Tools.plot import draw_dif, draw_pos, plot_dif, plot_dif2, draw_pos2
+from utils.plot import draw_dif, draw_pos, plot_dif, plot_dif2, draw_pos2
 from statistics import mean
 from torch.utils.tensorboard import SummaryWriter
 from rltorch.memory import MultiStepMemory

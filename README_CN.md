@@ -65,15 +65,15 @@ BC、TD3、SAC、E-SAC、本文提出的方法训练的最佳模型存储在resu
 2. 在`本代码`文件夹下使用以下命令进行训练（注意修改代码`train_all.py`中的IP号，使用--render开启训练渲染，使用--plot绘制可视化结果）
     ```
     # 自适应权重NIRL
-    python train_all.py --agent ROT --port 12345 --type soft --model_name srot
+    python train_all.py --agent HIRL --port 12345 --type soft --model_name s-HIRL
     ```
     ```
     # 线性权重NIRL
-    python train_all.py --agent ROT --port 12345 --type linear --bc_weight 1 --model_name lrot
+    python train_all.py --agent HIRL --port 12345 --type linear --bc_weight 1 --model_name l-HIRL
     ```
     ```
     # 固定权重NIRL
-    python train_all.py --agent ROT --port 12345 --type fixed --bc_weight 0.5 --model_name frot
+    python train_all.py --agent HIRL --port 12345 --type fixed --bc_weight 0.5 --model_name f-HIRL
     ```
     ```
     # TD3
@@ -101,13 +101,13 @@ BC、TD3、SAC、E-SAC、本文提出的方法训练的最佳模型存储在resu
     # 成功率测试
     # 在相应训练代码后添加'--test --test_mode 1'即可，其中test mode 1为随机初始化，test mode 2为无限导弹，test mode 3为原始环境测试
     # 以下为一个例子
-    python train_all.py --agent ROT --port 12345 --type soft --model_name srot --test --test_mode 1 --seed 1
+    python validate_all.py --agent HIRL --port 12345 --type soft --model_name s-HIRL --test --test_mode 1 --seed 1
     ```
     ```
     # 奖励测试
     # 在相应训练代码后添加'--test --test_mode 4'即可，其中test mode 4为随机初始化，test mode 5为原始环境测试
     # 以下为一个例子
-    python train_all.py --agent ROT --port 12345 --type soft --model_name srot --test --test_mode 4 --seed 1
+    python validate_all.py --agent HIRL --port 12345 --type soft --model_name s-HIRL --test --test_mode 4 --seed 1
     ```
 3. SAC、E-SAC方法在`本代码`文件夹下使用以下命令进行测试（测试模式类型同上）
     ```

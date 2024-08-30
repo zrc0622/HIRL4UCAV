@@ -2,16 +2,16 @@ import torch
 import argparse
 import dogfight_client as df
 import time
-from Network.SAC.agent import SacAgent as SACAgent
+from agent.SAC.agent import SacAgent as SACAgent
 import math
-from Environment.HarfangEnv_GYM import *
-from Environment.HarfangEnv_GYM_test1 import *
-from Environment.HarfangEnv_GYM_test2 import *
+from environment.HarfangEnv_GYM import *
+from environment.HarfangEnv_GYM_test1 import *
+from environment.HarfangEnv_GYM_test2 import *
 import gym
 from pathlib import Path
 import datetime
 import csv
-from Tools.plot import draw_dif, draw_pos, plot_dif, plot_dif2, draw_pos2
+from utils.plot import draw_dif, draw_pos, plot_dif, plot_dif2, draw_pos2
 from statistics import mean
 from torch.utils.tensorboard import SummaryWriter
 from rltorch.memory import MultiStepMemory
@@ -59,7 +59,7 @@ def main(config):
     action_space = gym.spaces.Box(low=np.array([-1.0] * actionDim), high=np.array([1.0] * actionDim), dtype=np.float64)
     useLayerNorm = True
 
-    bc_actor_dir = 'models\\BC\\bc_1'
+    bc_actor_dir = './models/BC/bc_1'
     bc_actor_name = 'Agent20_successRate0.64'
 
     name = 'Harfang_GYM'
@@ -70,7 +70,7 @@ def main(config):
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
     log_dir = 'logs4/SAC/esac_34/log/2024_3_2_10_17'
-    model_dir = 'logs4/SAC/esac_34/log/2024_3_2_10_17/model'
+    model_dir = log_dir + '/model'
     model_name = 'Agent7_100_-1430.pth'
 
     agent = SACAgent(observation_space=state_space, action_space=action_space, log_dir=log_dir, batch_size=batchSize, lr=actorLR, hidden_units = [hiddenLayer1, hiddenLayer2],
