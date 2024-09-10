@@ -45,12 +45,10 @@ The best models trained by BC、TD3、SAC、E-SAC、HIRL (our method) are stored
 > Display the effectiveness of the policy trained by the HIRL.
 
 ### One Missile
-
-<img src="https://lh3.googleusercontent.com/d/1G2i_rfpLdNkbgl3ML4TfWUww4uFOfxc0=s960?authuser=0" >
+![image](results/single.gif)
 
 ### Infinite Missiles
-
-<img src="https://lh3.googleusercontent.com/d/11zh_UTHaX1WEYB0xJAFr_8Jtf6aqd5fZ/=s960?authuser=0" >
+![image](results/multi.gif)
 
 ## Getting Started
 
