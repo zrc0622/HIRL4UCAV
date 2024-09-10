@@ -114,3 +114,13 @@ BC、TD3、SAC、E-SAC、本文提出的方法训练的最佳模型存储在resu
     python validate_sac.py --test_mode 1 --port 12345 --seed 1 
     ```
 
+## 引用
+```
+@misc{li2024imitative,
+    title={An Imitative Reinforcement Learning Framework for Autonomous Dogfight}, 
+    author={Siyuan Li and Rongchang Zuo and Peng Liu and Yingnan Zhao},
+    year={2024},
+    eprint={2406.11562},
+    archivePrefix={arXiv}
+}
+```
