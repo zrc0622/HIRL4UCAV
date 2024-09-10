@@ -1,10 +1,10 @@
 import torch
 import argparse
-import dogfight_client as df
+import environments.dogfight_client as df
 import time
-from agent.SAC.agent import SacAgent as SACAgent
+from agents.SAC.agent import SacAgent as SACAgent
 import math
-from environment.HarfangEnv_GYM import *
+from environments.HarfangEnv_GYM import *
 import gym
 from pathlib import Path
 import datetime
@@ -13,9 +13,42 @@ from utils.plot import draw_dif, draw_pos, plot_dif, plot_dif2, draw_pos2
 from statistics import mean
 from torch.utils.tensorboard import SummaryWriter
 from rltorch.memory import MultiStepMemory
+from utils.read_data import read_data
+
+def get_loc_diff(state):
+    loc_diff = (((state[0] * 10000) ** 2) + ((state[1] * 10000) ** 2) + ((state[2] * 10000) ** 2)) ** (1 / 2)
+    return loc_diff
+
+def get_reward(state, action):
+    reward = 0
+    loc_diff = get_loc_diff(state)  # get location difference information for reward
+    
+    # 距离惩罚：帮助追击
+    reward -= (0.0001 * loc_diff)
+
+    # 目标角惩罚：帮助锁敌
+    reward -= state[-4] * 10
+
+    # 开火奖励：帮助开火
+    if action[-1] > 0: # 如果导弹发射
+        if state[-1] > 0 and state[-2] < 0: # 且导弹存在、不锁敌
+            reward -= 4
+        elif state[-1] > 0 and state[-2] > 0: # 且导弹存在、锁敌
+            reward += 100
+        else:
+            reward -= 1
+
+    return reward
+
+def get_termination(state):
+    done = False
+    if state[-3] <= 0: # 敌机血量低于0则结束
+        done = True
+    return done
 
 def validate(validationEpisodes, env:HarfangEnv, validationStep, agent:SACAgent, plot, plot_dir, arttir, model_dir, episode, checkpointRate, tensor_writer:SummaryWriter, highScore, successRate):          
     success = 0
+    fire_success = 0
     valScores = []
     self_pos = []
     oppo_pos = []
@@ -55,6 +88,8 @@ def validate(validationEpisodes, env:HarfangEnv, validationStep, agent:SACAgent,
                         # plot_dif(dif, lock, fire, plot_dir, f'my_sdif1_{arttir}.png')
                         plot_dif2(dif, lock, missile, fire, plot_dir, f'my_sdif2_{arttir}.png')
                     success += 1
+                if env.fire_success:
+                    fire_success += 1
                 break
 
         valScores.append(totalReward)
@@ -80,7 +115,7 @@ def validate(validationEpisodes, env:HarfangEnv, validationStep, agent:SACAgent,
     if mean(valScores) > highScore or success/validationEpisodes >= successRate or arttir%10 == 0:
         if mean(valScores) > highScore: # 总奖励分数
             highScore = mean(valScores)
-            agent.save_models("Agent{}_{}_{}".format(arttir, round(success/validationEpisodes*100), round(mean(valScores))))
+            agent.save_models("Agent{}_{}_{}_".format(arttir, round(success/validationEpisodes*100), round(mean(valScores))))
             if plot:
                 draw_pos(f'pos1_{arttir}.png', self_pos, oppo_pos, fire, lock, plot_dir) 
                 # draw_pos2(f'pos2_{arttir}.png', self_pos, oppo_pos, plot_dir)
@@ -89,16 +124,17 @@ def validate(validationEpisodes, env:HarfangEnv, validationStep, agent:SACAgent,
 
         elif success / validationEpisodes >= successRate or arttir%10 == 0: # 追逐成功率
             successRate = success / validationEpisodes
-            agent.save_models("Agent{}_{}_{}".format(arttir, round(success/validationEpisodes*100), round(mean(valScores))))
+            agent.save_models("Agent{}_{}_{}_".format(arttir, round(success/validationEpisodes*100), round(mean(valScores))))
             if plot:
                 draw_pos(f'pos1_{arttir}.png', self_pos, oppo_pos, fire, lock, plot_dir)
                 # draw_pos2(f'pos2_{arttir}.png', self_pos, oppo_pos, plot_dir)
                 # plot_dif(dif, lock, fire, plot_dir, f'my_dif1_{arttir}.png')
                 plot_dif2(dif, lock, missile, fire, plot_dir, f'my_dif2_{arttir}.png')
 
-    print('Validation Episode: ', (episode//checkpointRate)+1, ' Average Reward:', mean(valScores), ' Success Rate:', success / validationEpisodes)
+    print('Validation Episode: ', (episode//checkpointRate)+1, ' Average Reward:', mean(valScores), ' Success Rate:', success / validationEpisodes, ' Fire Success Rate:', fire_success / validationEpisodes)
     tensor_writer.add_scalar('Validation/Avg Reward', mean(valScores), episode)
     tensor_writer.add_scalar('Validation/Success Rate', success/validationEpisodes, episode)
+    tensor_writer.add_scalar('Validation/Fire Success Rate', fire_success/validationEpisodes, episode)
     return highScore, successRate
 
 def save_parameters_to_txt(log_dir, **kwargs):
@@ -115,15 +151,16 @@ def main(config):
     render = not (config.render)
     model_name = config.model_name
     sac_type = config.type
+    ai_expert = config.ai_expert
 
-    df.connect("10.243.58.131", port)
+    df.connect("172.27.58.131", port)
 
     start = time.time()
     df.disable_log()
 
     trainingEpisodes = 6000
     validationEpisodes = 20
-    explorationEpisodes = 200
+    explorationEpisodes = 20
 
     df.set_renderless_mode(render)
     df.set_client_update_mode(True)
@@ -196,10 +233,12 @@ def main(config):
         print('Training Started')
         scores = []
         trainsuccess = []
+        firesuccess = []
         for episode in range(trainingEpisodes):
             state = env.reset()
             totalReward = 0
             done = False
+            shut_down = False
             fire = False
 
             for step in range(maxStep):
@@ -219,25 +258,30 @@ def main(config):
                         agent.learn(if_expert = False)
                 
                 elif done:
-                    if env.episode_success:
-                        fire = True
+                    if env.episode_success: shut_down = True
+                    if env.fire_success: fire = True
                     break
             
             scores.append(totalReward)
-            if fire:
+            if shut_down:
                 trainsuccess.append(1)
             else:
                 trainsuccess.append(0)
+            if fire:
+                firesuccess.append(1)
+            else:
+                firesuccess.append(0)
             writer.add_scalar('Training/Episode Reward', totalReward, episode)
             writer.add_scalar('Training/Last 100 Episode Average Reward', np.mean(scores[-100:]), episode)
             writer.add_scalar('Training/Average Step Reward', totalReward/step, episode)
             writer.add_scalar('Training/Last 50 Episode Train success rate', np.mean(trainsuccess[-50:]), episode)
+            writer.add_scalar('Training/Last 50 Episode Fire success rate', np.mean(firesuccess[-50:]), episode)
             
             now = time.time()
             seconds = int((now - start) % 60)
             minutes = int(((now - start) // 60) % 60)
             hours = int((now - start) // 3600)
-            print('Episode: ', episode+1, ' Completed: %r' % done,' Success: %r' % fire, \
+            print('Episode: ', episode+1, ' Completed: %r' % done,' Success: %r' % fire, ' Fire Success: %r' % fire,\
                 ' FinalReward: %.2f' % totalReward, \
                 ' Last100AverageReward: %.2f' % np.mean(scores[-100:]), \
                 'RunTime: ', hours, ':',minutes,':', seconds)
@@ -253,74 +297,82 @@ def main(config):
         # expert_num = 0
 
         expert_memory = MultiStepMemory(100000, state_space.shape, action_space.shape, device, gamma, 1)
-        agent.load_bc_actor(bc_actor_name, bc_actor_dir)
-        
         print('initialize the expert buffer')
-        for expert_episode in range(100):
-            state = env.reset()
-            done = False
-            success = False
-            temp_storage = []
-            point = 0
-            for step in range(maxStep):
-                if not done:
-                    state_tensor = torch.tensor(np.array(state), dtype=torch.float).to(device)
-                    action = agent.bc_actor(state_tensor)
 
-                    n_state, reward, done, info, stepsuccess = env.step(action)
+        if ai_expert:
+            print("load ai expert data:")
+            data_dir = './expert_data/expert_data_ai2.csv'
+            expert_states, expert_actions = read_data(data_dir)
+            
+            i = 0
+            count = 0
+            while i < expert_states.shape[0]:
+                state = expert_states[i]
+                action = expert_actions[i]
+                reward = get_reward(state, action)
+                next_state = expert_states[i+1]
+                done = get_termination(next_state)
+                
+                if done: 
+                    i += 1
+                    count += 1
+                    print(count)
+                
+                i += 1
 
-                    # if point == 0: # important
-                    if True:
-                        if action.cpu().detach().numpy()[-1] > 0:
-                            success_action = action.cpu().detach().numpy()
-                            success_action[-1] = 1
-                            temp_storage.append((state, success_action, reward, n_state, done, done))
-                        else:
-                            temp_storage.append((state, action.cpu().detach().numpy(), reward, n_state, done, done))
+                expert_memory.append(state, action, reward, next_state, done, done)
+        else:
+            print("collect expert data")
+            agent.load_bc_actor(bc_actor_name, bc_actor_dir)
 
-                    if stepsuccess:
-                        success = True
-                        point = 1
-                        
-                    state = n_state
+            for expert_episode in range(100):
+                state = env.reset()
+                done = False
+                success = False
+                temp_storage = []
+                point = 0
+                for step in range(maxStep):
+                    if not done:
+                        state_tensor = torch.tensor(np.array(state), dtype=torch.float).to(device)
+                        action = agent.bc_actor(state_tensor)
 
-                    if step == maxStep-1:
-                        done = True
+                        n_state, reward, done, info, stepsuccess = env.step(action)
 
-                    if done:
-                        break
-            if success:
-                for data in temp_storage:
-                    expert_memory.append(*data)
-                print('episode: ', expert_episode, 'step: ', step)
-                # break
+                        # if point == 0: # important
+                        if True:
+                            if action.cpu().detach().numpy()[-1] > 0:
+                                success_action = action.cpu().detach().numpy()
+                                success_action[-1] = 1
+                                temp_storage.append((state, success_action, reward, n_state, done, done))
+                            else:
+                                temp_storage.append((state, action.cpu().detach().numpy(), reward, n_state, done, done))
+
+                        if stepsuccess:
+                            success = True
+                            point = 1
+                            
+                        state = n_state
+
+                        if step == maxStep-1:
+                            done = True
+
+                        if done:
+                            break
+                if success:
+                    for data in temp_storage:
+                        expert_memory.append(*data)
+                    print('episode: ', expert_episode, 'step: ', step)
+                    # break
+        
         print("expert buffer size is: ", len(expert_memory))
 
         # # test
         # for _ in range(1000):
         #     expert_data = expert_memory.sample(expert_num)
         #     agent.learn(True, expert_num, expert_data)
-        
-        # # test
-        # batch1 = expert_memory.sample(64)
-        # for item in batch1:
-        #     # 打印元素及其对应的类型
-        #     print(f"1{item.size()}")
-        # batch2 = expert_memory.sample(32)
-        # for item in batch2:
-        #     # 打印元素及其对应的类型
-        #     print(f"2{item.size()}")
-        # concatenated_tensors = []
-        # for i in range(len(batch1)):
-        #     concatenated = torch.cat((batch1[i], batch2[i]), dim=0)
-        #     concatenated_tensors.append(concatenated)
-        # batch = tuple(concatenated_tensors)
-        # for item in batch:
-        #     # 打印元素及其对应的类型
-        #     print(f"{item.size()}")
 
         print("Exploration Started")
-        for episode in range(10):
+        for episode in range(explorationEpisodes):
             state = env.reset()
             done = False
             for step in range(maxStep):
@@ -348,6 +400,7 @@ def main(config):
         print('Training Started')
         scores = []
         trainsuccess = []
+        firesuccess = []
         for episode in range(trainingEpisodes):
             # if episode % 6 == 0 and expert_num != 0: # important
             #     expert_num -= 1
@@ -356,6 +409,7 @@ def main(config):
             state = env.reset()
             totalReward = 0
             done = False
+            shut_down = False
             fire = False
 
             for step in range(maxStep):
@@ -379,25 +433,30 @@ def main(config):
                         agent.learn(True, expert_num, expert_data)
                 
                 elif done:
-                    if env.episode_success:
-                        fire = True
+                    if env.episode_success: shut_down = True
+                    if env.fire_success: fire = True
                     break
             
             scores.append(totalReward)
-            if fire:
+            if shut_down:
                 trainsuccess.append(1)
             else:
                 trainsuccess.append(0)
+            if fire:
+                firesuccess.append(1)
+            else:
+                firesuccess.append(0)
             writer.add_scalar('Training/Episode Reward', totalReward, episode)
             writer.add_scalar('Training/Last 100 Episode Average Reward', np.mean(scores[-100:]), episode)
             writer.add_scalar('Training/Average Step Reward', totalReward/step, episode)
             writer.add_scalar('Training/Last 50 Episode Train success rate', np.mean(trainsuccess[-50:]), episode)
+            writer.add_scalar('Training/Last 50 Episode Fire success rate', np.mean(firesuccess[-50:]), episode)
             
             now = time.time()
             seconds = int((now - start) % 60)
             minutes = int(((now - start) // 60) % 60)
             hours = int((now - start) // 3600)
-            print('Episode: ', episode+1, ' Completed: %r' % done,' Success: %r' % fire, \
+            print('Episode: ', episode+1, ' Completed: %r' % done,' Success: %r' % fire, ' Fire Success: %r' % fire,\
                 ' FinalReward: %.2f' % totalReward, \
                 ' Last100AverageReward: %.2f' % np.mean(scores[-100:]), \
                 'RunTime: ', hours, ':',minutes,':', seconds)
@@ -414,4 +473,5 @@ if __name__ == '__main__':
     parser.add_argument('--render', action='store_true')
     parser.add_argument('--model_name', type=str, default=None)
     parser.add_argument('--type', type=str, default='sac')
+    parser.add_argument('--ai_expert', action='store_true')
     main(parser.parse_args())

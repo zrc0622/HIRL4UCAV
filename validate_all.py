@@ -1,20 +1,18 @@
 #IMPORTS
-from agent.TD3 import Agent as TD3Agent
-from agent.HIRL import Agent as HIRLAgent
-from agent.BC import Agent as BCAgent
+from agents.TD3 import Agent as TD3Agent
+from agents.HIRL import Agent as HIRLAgent
+from agents.BC import Agent as BCAgent
 from utils.plot import draw_dif, draw_pos, plot_dif, plot_dif2, draw_pos2
 from utils.read_data import read_data
-from ReplayMemory import *
+from utils.buffer import *
 import numpy as np
 import time
 import sys
 import math
 from torch.utils.tensorboard import SummaryWriter
 from statistics import mean
-from environment.HarfangEnv_GYM import *
-from environment.HarfangEnv_GYM_test1 import *
-from environment.HarfangEnv_GYM_test2 import *
-import dogfight_client as df
+from environments.HarfangEnv_GYM import *
+import environments.dogfight_client as df
 import datetime
 import os
 from pathlib import Path
@@ -39,7 +37,7 @@ def validate(validationEpisodes, env:HarfangEnv, validationStep, agent:HIRLAgent
         for step in range(validationStep):
             if not done:
                 action = agent.chooseActionNoNoise(state)
-                n_state,reward,done, info, iffire, beforeaction, afteraction, locked, reward, step_success = env.step_test(action)
+                n_state, reward, done, info, iffire, beforeaction, afteraction, locked, step_success = env.step_test(action)
                 state = n_state
                 totalReward += reward
                 
@@ -197,7 +195,7 @@ def main(config):
 
     if test_mode == 1:
         print('test mode 1')
-        env = HarfangEnv_test1()
+        env = RandomHarfangEnv()
         success = 0
         fire_success = 0
         validationEpisodes = 50
@@ -210,7 +208,7 @@ def main(config):
             for step in range(validationStep):
                 if not done:
                     action = agent.chooseActionNoNoise(state)
-                    n_state, reward, done, info, iffire, beforeaction, afteraction, locked, reward, step_success = env.step_test(action)
+                    n_state, reward, done, info, iffire, beforeaction, afteraction, locked, step_success = env.step_test(action)
                     state = n_state
                     totalReward += reward
 
@@ -232,7 +230,7 @@ def main(config):
 
     elif test_mode == 2:
         print('test mode 2')
-        env = HarfangEnv_test2()
+        env = InfiniteHarfangEnv()
         success = 0
         validationEpisodes = 10
         for e in range(validationEpisodes):
@@ -243,7 +241,7 @@ def main(config):
             for step in range(validationStep):
                 if not done:
                     action = agent.chooseActionNoNoise(state)
-                    n_state,reward,done, info, iffire, beforeaction, afteraction, locked, reward, step_success = env.step_test(action, step)
+                    n_state, reward, done, info, iffire, beforeaction, afteraction, locked, step_success = env.step_test(action, step)
                     state = n_state
                     totalReward += reward
 
@@ -272,7 +270,7 @@ def main(config):
             for step in range(validationStep):
                 if not done:
                     action = agent.chooseActionNoNoise(state)
-                    n_state, reward, done, info, iffire, beforeaction, afteraction, locked, reward, step_success   = env.step_test(action)
+                    n_state, reward, done, info, iffire, beforeaction, afteraction, locked, step_success = env.step_test(action)
                     state = n_state
                     totalReward += reward
 
@@ -294,7 +292,7 @@ def main(config):
 
     elif test_mode == 4:
         print('test mode 4')
-        env = HarfangEnv_test1()
+        env = RandomHarfangEnv()
         success = 0
         fire_success = 0
         validationEpisodes = 50
@@ -307,7 +305,7 @@ def main(config):
             for step in range(validationStep):
                 if not done:
                     action = agent.chooseActionNoNoise(state)
-                    n_state, reward, done, info, iffire, beforeaction, afteraction, locked, reward, step_success   = env.step_test(action)
+                    n_state, reward, done, info, iffire, beforeaction, afteraction, locked, step_success = env.step_test(action)
                     state = n_state
                     totalReward += reward
 
@@ -339,7 +337,7 @@ def main(config):
             for step in range(validationStep):
                 if not done:
                     action = agent.chooseActionNoNoise(state)
-                    n_state, reward, done, info, iffire, beforeaction, afteraction, locked, reward, step_success   = env.step_test(action)
+                    n_state, reward, done, info, iffire, beforeaction, afteraction, locked, step_success = env.step_test(action)
                     state = n_state
                     totalReward += reward
 

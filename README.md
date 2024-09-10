@@ -46,11 +46,11 @@ The best models trained by BC、TD3、SAC、E-SAC、HIRL (our method) are stored
 
 ### One Missile
 
-![image](videos/single.gif)
+![image](results/single.gif)
 
 ### Infinite Missiles
 
-![image](videos/multi.gif)
+![image](results/multi.gif)
 
 ## Getting Started
 

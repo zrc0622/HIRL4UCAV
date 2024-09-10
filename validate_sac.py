@@ -1,12 +1,10 @@
 import torch
 import argparse
-import dogfight_client as df
+import environments.dogfight_client as df
 import time
-from agent.SAC.agent import SacAgent as SACAgent
+from agents.SAC.agent import SacAgent as SACAgent
 import math
-from environment.HarfangEnv_GYM import *
-from environment.HarfangEnv_GYM_test1 import *
-from environment.HarfangEnv_GYM_test2 import *
+from environments.HarfangEnv_GYM import *
 import gym
 from pathlib import Path
 import datetime
@@ -84,7 +82,7 @@ def main(config):
 
     if test_mode == 1:
         print('test mode 1')
-        env = HarfangEnv_test1()
+        env = RandomHarfangEnv()
         success = 0
         fire_success = 0
         validationEpisodes = 50
@@ -97,7 +95,7 @@ def main(config):
             for step in range(validationStep):
                 if not done:
                     action = agent.exploit(state)
-                    n_state, reward, done, info, iffire, beforeaction, afteraction, locked, reward, step_success   = env.step_test(action)
+                    n_state, reward, done, info, iffire, beforeaction, afteraction, locked, step_success = env.step_test(action)
                     state = n_state
                     totalReward += reward
 
@@ -119,7 +117,7 @@ def main(config):
 
     elif test_mode == 2:
         print('test mode 2')
-        env = HarfangEnv_test2()
+        env = InfiniteHarfangEnv()
         success = 0
         validationEpisodes = 10
         for e in range(validationEpisodes):
@@ -130,7 +128,7 @@ def main(config):
             for step in range(validationStep):
                 if not done:
                     action = agent.exploit(state)
-                    n_state,reward,done, info, iffire, beforeaction, afteraction, locked, reward, step_success = env.step_test(action, step)
+                    n_state,reward,done, info, iffire, beforeaction, afteraction, locked, step_success = env.step_test(action, step)
                     state = n_state
                     totalReward += reward
 
@@ -159,7 +157,7 @@ def main(config):
             for step in range(validationStep):
                 if not done:
                     action = agent.exploit(state)
-                    n_state, reward, done, info, iffire, beforeaction, afteraction, locked, reward, step_success   = env.step_test(action)
+                    n_state, reward, done, info, iffire, beforeaction, afteraction, locked, step_success = env.step_test(action)
                     state = n_state
                     totalReward += reward
 
@@ -181,7 +179,7 @@ def main(config):
 
     elif test_mode == 4:
         print('test mode 4')
-        env = HarfangEnv_test1()
+        env = RandomHarfangEnv()
         success = 0
         fire_success = 0
         validationEpisodes = 50
@@ -194,7 +192,7 @@ def main(config):
             for step in range(validationStep):
                 if not done:
                     action = agent.exploit(state)
-                    n_state, reward, done, info, iffire, beforeaction, afteraction, locked, reward, step_success   = env.step_test(action)
+                    n_state, reward, done, info, iffire, beforeaction, afteraction, locked, step_success   = env.step_test(action)
                     state = n_state
                     totalReward += reward
 
@@ -226,7 +224,7 @@ def main(config):
             for step in range(validationStep):
                 if not done:
                     action = agent.exploit(state)
-                    n_state, reward, done, info, iffire, beforeaction, afteraction, locked, reward, step_success   = env.step_test(action)
+                    n_state, reward, done, info, iffire, beforeaction, afteraction, locked, step_success   = env.step_test(action)
                     state = n_state
                     totalReward += reward
 

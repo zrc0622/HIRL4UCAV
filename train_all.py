@@ -1,20 +1,18 @@
 #IMPORTS
-from agent.TD3 import Agent as TD3Agent
-from agent.HIRL import Agent as HIRLAgent
-from agent.BC import Agent as BCAgent
+from agents.TD3 import Agent as TD3Agent
+from agents.HIRL import Agent as HIRLAgent
+from agents.BC import Agent as BCAgent
 from utils.plot import draw_dif, draw_pos, plot_dif, plot_dif2, draw_pos2
 from utils.read_data import read_data
-from ReplayMemory import *
+from utils.buffer import *
 import numpy as np
 import time
 import sys
 import math
 from torch.utils.tensorboard import SummaryWriter
 from statistics import mean
-from environment.HarfangEnv_GYM import *
-from environment.HarfangEnv_GYM_test1 import *
-from environment.HarfangEnv_GYM_test2 import *
-import dogfight_client as df
+from environments.HarfangEnv_GYM import *
+import environments.dogfight_client as df
 import datetime
 import os
 from pathlib import Path
@@ -25,6 +23,7 @@ import random
 
 def validate(validationEpisodes, env:HarfangEnv, validationStep, agent:HIRLAgent, plot, plot_dir, arttir, model_dir, episode, checkpointRate, tensor_writer:SummaryWriter, highScore, successRate):          
     success = 0
+    fire_success = 0
     valScores = []
     self_pos = []
     oppo_pos = []
@@ -64,6 +63,8 @@ def validate(validationEpisodes, env:HarfangEnv, validationStep, agent:HIRLAgent
                         # plot_dif(dif, lock, fire, plot_dir, f'my_sdif1_{arttir}.png')
                         plot_dif2(dif, lock, missile, fire, plot_dir, f'my_sdif2_{arttir}.png')
                     success += 1
+                if env.fire_success:
+                    fire_success += 1
                 break
 
         valScores.append(totalReward)
@@ -89,7 +90,7 @@ def validate(validationEpisodes, env:HarfangEnv, validationStep, agent:HIRLAgent
     if mean(valScores) > highScore or success/validationEpisodes >= successRate or arttir%10 == 0:
         if mean(valScores) > highScore: # 总奖励分数
             highScore = mean(valScores)
-            agent.saveCheckpoints("Agent{}_{}_{}".format(arttir, round(success/validationEpisodes*100), round(mean(valScores))), model_dir)
+            agent.saveCheckpoints("Agent{}_{}_{}_".format(arttir, round(success/validationEpisodes*100), round(mean(valScores))), model_dir)
             if plot:
                 draw_pos(f'pos1_{arttir}.png', self_pos, oppo_pos, fire, lock, plot_dir) 
                 # draw_pos2(f'pos2_{arttir}.png', self_pos, oppo_pos, plot_dir)
@@ -98,16 +99,17 @@ def validate(validationEpisodes, env:HarfangEnv, validationStep, agent:HIRLAgent
 
         elif success / validationEpisodes >= successRate or arttir%10 == 0: # 追逐成功率
             successRate = success / validationEpisodes
-            agent.saveCheckpoints("Agent{}_{}_{}".format(arttir, round(success/validationEpisodes*100), round(mean(valScores))), model_dir)
+            agent.saveCheckpoints("Agent{}_{}_{}_".format(arttir, round(success/validationEpisodes*100), round(mean(valScores))), model_dir)
             if plot:
                 draw_pos(f'pos1_{arttir}.png', self_pos, oppo_pos, fire, lock, plot_dir)
                 # draw_pos2(f'pos2_{arttir}.png', self_pos, oppo_pos, plot_dir)
                 # plot_dif(dif, lock, fire, plot_dir, f'my_dif1_{arttir}.png')
                 plot_dif2(dif, lock, missile, fire, plot_dir, f'my_dif2_{arttir}.png')
 
-    print('Validation Episode: ', (episode//checkpointRate)+1, ' Average Reward:', mean(valScores), ' Success Rate:', success / validationEpisodes)
+    print('Validation Episode: ', (episode//checkpointRate)+1, ' Average Reward:', mean(valScores), ' Success Rate:', success / validationEpisodes, ' Fire Success Rate:', fire_success/validationEpisodes)
     tensor_writer.add_scalar('Validation/Avg Reward', mean(valScores), episode)
     tensor_writer.add_scalar('Validation/Success Rate', success/validationEpisodes, episode)
+    tensor_writer.add_scalar('Validation/Fire Success Rate', fire_success/validationEpisodes, episode)
     return highScore, successRate
 
 def save_parameters_to_txt(log_dir, **kwargs):
@@ -145,7 +147,7 @@ def main(config):
     # PARAMETERS
     trainingEpisodes = 6000
     validationEpisodes = 20 # 20
-    explorationEpisodes = 200 # 200
+    explorationEpisodes = 20 # 200
 
     # # Test = True
     # if Test:
@@ -187,8 +189,9 @@ def main(config):
 
     start_time = datetime.datetime.now()
     dir = Path.cwd() # 获取工作区路径
-    log_dir = str(dir) + "/" + "logs/" + agent_name + "/" + model_name + "/" + "log/" + str(start_time.year)+'_'+str(start_time.month)+'_'+str(start_time.day)+'_'+str(start_time.hour)+'_'+str(start_time.minute) # tensorboard文件夹路径
+    log_dir = "logs/" + agent_name + "/" + model_name + "/" + "log/" + str(start_time.year)+'_'+str(start_time.month)+'_'+str(start_time.day)+'_'+str(start_time.hour)+'_'+str(start_time.minute)
     model_dir = os.path.join(log_dir, 'model')
+    log_dir = str(dir) + "/" + log_dir # tensorboard文件夹路径
     summary_dir = os.path.join(log_dir, 'summary')
     plot_dir = os.path.join(log_dir, 'plot')
     os.makedirs(log_dir, exist_ok=True)
@@ -255,10 +258,12 @@ def main(config):
             print('success load bc model')
         scores = []
         trainsuccess = []
+        firesuccess = []
         for episode in range(trainingEpisodes):
             state = env.reset()
             totalReward = 0
             done = False
+            shut_down = False
             fire = False
 
             if hirl_type == 'linear':
@@ -296,25 +301,31 @@ def main(config):
                         writer.add_scalar('Loss/BC_Fire_Loss', bc_fire_loss, step + episode * maxStep)
                         
                 elif done: # done可能是过高、过低、击落、撞落
-                    if env.episode_success:
-                        fire = True # fire可能是击落、撞落
+                    if env.episode_success: shut_down = True # fire可能是击落、撞落
+                    if env.fire_success: fire = True
                     break
+
             scores.append(totalReward)
-            if fire:
+            if shut_down:
                 trainsuccess.append(1)
             else:
                 trainsuccess.append(0)
+            if fire:
+                firesuccess.append(1)
+            else:
+                firesuccess.append(0)
             writer.add_scalar('Training/Episode Reward', totalReward, episode)
             writer.add_scalar('Training/Last 100 Episode Average Reward', np.mean(scores[-100:]), episode)
             writer.add_scalar('Training/Average Step Reward', totalReward/step, episode)
             writer.add_scalar('Training/Last 50 Episode Train success rate', np.mean(trainsuccess[-50:]), episode)
+            writer.add_scalar('Training/Last 50 Episode Fire success rate', np.mean(firesuccess[-50:]), episode)
             writer.add_scalar('Others/BC_weight', bc_weight_now, episode)               
             
             now = time.time()
             seconds = int((now - start) % 60)
             minutes = int(((now - start) // 60) % 60)
             hours = int((now - start) // 3600)
-            print('Episode: ', episode+1, ' Completed: %r' % done,' Success: %r' % fire, \
+            print('Episode: ', episode+1, ' Completed: %r' % done,' Success: %r' % shut_down, ' Fire Success: %r' % fire,\
                 ' FinalReward: %.2f' % totalReward, \
                 ' Last100AverageReward: %.2f' % np.mean(scores[-100:]), \
                 'RunTime: ', hours, ':',minutes,':', seconds, 'BC_weight: ', bc_weight_now) # completed表示回合结束，fire表示成功击落或撞落
@@ -348,11 +359,13 @@ def main(config):
         print("Training Started")
         scores = []
         trainsuccess = []
+        firesuccess = []
         for episode in range(trainingEpisodes):
             state = env.reset()
             totalReward = 0
             done = False
-            fire = False # 表示是否成功
+            shut_down = False # 表示是否成功
+            fire = False
             for step in range(maxStep):
                 if not done:
                     action = agent.chooseAction(state)
@@ -371,25 +384,30 @@ def main(config):
                         writer.add_scalar('Loss/Actor_Loss', actor_loss, step + episode * maxStep)
                         
                 elif done:
-                    if env.episode_success:
-                        fire = True
+                    if env.episode_success: shut_down = True
+                    if env.fire_success: fire = True
                     break
                 
             scores.append(totalReward)
-            if fire:
+            if shut_down:
                 trainsuccess.append(1)
             else:
                 trainsuccess.append(0)
+            if fire:
+                firesuccess.append(1)
+            else:
+                firesuccess.append(0)
             writer.add_scalar('Training/Episode Reward', totalReward, episode)
             writer.add_scalar('Training/Last 100 Episode Average Reward', np.mean(scores[-100:]), episode)
             writer.add_scalar('Training/Average Step Reward', totalReward/step, episode)
             writer.add_scalar('Training/Last 50 Episode Train success rate', np.mean(trainsuccess[-50:]), episode)
+            writer.add_scalar('Training/Last 50 Episode Fire success rate', np.mean(firesuccess[-50:]), episode)
             
             now = time.time()
             seconds = int((now - start) % 60)
             minutes = int(((now - start) // 60) % 60)
             hours = int((now - start) // 3600)
-            print('Episode: ', episode+1, ' Completed: %r' % done,' Success: %r' % fire, \
+            print('Episode: ', episode+1, ' Completed: %r' % done,' Success: %r' % shut_down, ' Fire Success: %r' % fire,\
                 ' FinalReward: %.2f' % totalReward, \
                 ' Last100AverageReward: %.2f' % np.mean(scores[-100:]), \
                 'RunTime: ', hours, ':',minutes,':', seconds)
