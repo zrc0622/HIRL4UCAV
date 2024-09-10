@@ -39,16 +39,14 @@ The best models trained by BC、TD3、SAC、E-SAC、HIRL (our method) are stored
 | E-SAC           | 11.4%           |
 | BC              | 92.3%           |
 
-
-
-## Policy Display
+<!-- ## Policy Display
 > Display the effectiveness of the policy trained by the HIRL.
 
 ### One Missile
-![image](results/single.gif)
+https://drive.google.com/file/d/1G2i_rfpLdNkbgl3ML4TfWUww4uFOfxc0/view?usp=drive_link
 
 ### Infinite Missiles
-![image](results/multi.gif)
+https://drive.google.com/file/d/11zh_UTHaX1WEYB0xJAFr_8Jtf6aqd5fZ/view?usp=drive_link -->
 
 ## Getting Started
 

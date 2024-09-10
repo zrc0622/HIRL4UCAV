@@ -39,15 +39,13 @@ BC、TD3、SAC、E-SAC、本文提出的方法训练的最佳模型存储在resu
 | E-SAC           | 11.4%           |
 | BC              | 92.3%           |
 
-
-
-## 本文方法训练得到的策略
+<!-- ## 本文方法训练得到的策略
 
 ### 单一炮弹场景下的策略
-![image](results/single.gif)
+https://drive.google.com/file/d/1G2i_rfpLdNkbgl3ML4TfWUww4uFOfxc0/view?usp=drive_link
 
 ### 无限炮弹场景下的策略
-![image](results/multi.gif)
+https://drive.google.com/file/d/11zh_UTHaX1WEYB0xJAFr_8Jtf6aqd5fZ/view?usp=drive_link -->
 
 ## 配置
 1. 安装`Harfang3D sandbox`的[Release版本](https://github.com/harfang3d/dogfight-sandbox-hg2/releases/tag/v1.3.0)或[源代码](https://github.com/harfang3d/dogfight-sandbox-hg2)，推荐安装源代码版本，这样可以自行更改环境的端口
