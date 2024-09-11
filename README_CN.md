@@ -85,7 +85,7 @@ https://drive.google.com/file/d/11zh_UTHaX1WEYB0xJAFr_8Jtf6aqd5fZ/view?usp=drive
     ```
     ```
     # E-SAC
-    python train_sac.py --type esac --port 12345 --model_name esac
+    python train_sac.py --type esac --port 12345 --model_name esac --ai_expert
     ```
 ## 测试
 1. 在`Harfang3D sandbox`下的`source`文件夹，使用以下命令打开`Harfang3D sandbox`，使用`network_port`指定端口号，打开后进入网络模式

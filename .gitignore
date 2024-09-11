@@ -10,3 +10,5 @@ logs5
 **/__pycache__
 .vscode/
 *.egg-info
+
+data/serpentine/plot

@@ -187,7 +187,7 @@ def main(config):
     bc_actor_dir = './models/BC/bc_1'
     bc_actor_name = 'Agent20_successRate0.64'
 
-    data_dir = './expert_data/expert_data_bc1.csv'
+    data_dir = './data/straight_line/expert_data_ai2.csv'
 
     name = 'Harfang_GYM'
 
@@ -301,7 +301,6 @@ def main(config):
 
         if ai_expert:
             print("load ai expert data:")
-            data_dir = './expert_data/expert_data_ai2.csv'
             expert_states, expert_actions = read_data(data_dir)
             
             i = 0
@@ -425,7 +424,7 @@ def main(config):
                     state = n_state
                     totalReward += reward
 
-                    if step % 10 == 0 and expert_num != 0: # important
+                    if step % 2 == 0 and expert_num != 0: # important
                         expert_num -= 1
 
                     if len(agent.memory) > agent.batch_size:
