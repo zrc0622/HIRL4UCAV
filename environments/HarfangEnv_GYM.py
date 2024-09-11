@@ -254,11 +254,7 @@ class HarfangSerpentineEnv(HarfangEnv):
     def __init__(self):
         super(HarfangSerpentineEnv, self).__init__()
 
-    def _apply_action(self, action_ally):
-        df.set_plane_pitch(self.Plane_ID_ally, float(action_ally[0]))
-        df.set_plane_roll(self.Plane_ID_ally, float(action_ally[1]))
-        df.set_plane_yaw(self.Plane_ID_ally, float(action_ally[2]))
-
+    def set_ennemy_yaw(self):
         self.serpentine_step += 1
 
         if self.serpentine_step % self.duration == 0:
@@ -270,6 +266,13 @@ class HarfangSerpentineEnv(HarfangEnv):
         df.set_plane_pitch(self.Plane_ID_oppo, float(0))
         df.set_plane_roll(self.Plane_ID_oppo, float(0))
         df.set_plane_yaw(self.Plane_ID_oppo, float(self.oppo_yaw))
+
+    def _apply_action(self, action_ally):
+        df.set_plane_pitch(self.Plane_ID_ally, float(action_ally[0]))
+        df.set_plane_roll(self.Plane_ID_ally, float(action_ally[1]))
+        df.set_plane_yaw(self.Plane_ID_ally, float(action_ally[2]))
+
+        self.set_ennemy_yaw()
         
         # self.now_missile_state = False
 

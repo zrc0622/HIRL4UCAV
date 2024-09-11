@@ -130,6 +130,7 @@ def main(config):
     load_model = config.load_model
     render = not (config.render)
     plot = config.plot
+    env_type = config.env
 
     if config.seed is not None:
         random.seed(config.seed)
@@ -145,16 +146,26 @@ def main(config):
     df.disable_log()
 
     # PARAMETERS
-    trainingEpisodes = 6000
-    validationEpisodes = 20 # 20
-    explorationEpisodes = 20 # 200
+    if env_type == "straight_line":
+        print("env is harfang straight line")
+        trainingEpisodes = 6000
+        validationEpisodes = 20 # 20
+        explorationEpisodes = 20 # 200
+        maxStep = 6000 # 6000
+        validationStep = 6000 # 6000
 
-    # # Test = True
-    # if Test:
-    #     render = True
-    # else:
-    #     render = True
-        
+        env = HarfangEnv()
+
+    elif env_type == "serpentine":
+        print("env is harfang serpentine")
+        trainingEpisodes = 6000
+        validationEpisodes = 20 # 20
+        explorationEpisodes = 20 # 200
+        maxStep = 4000 # 6000
+        validationStep = 4000 # 6000
+
+        env = HarfangSerpentineEnv()
+
     df.set_renderless_mode(render)
     df.set_client_update_mode(True)
 
@@ -167,8 +178,6 @@ def main(config):
     highScore = -math.inf
     successRate = 0
     batchSize = 128 #128
-    maxStep = 6000 # 6000
-    validationStep = 6000 # 6000
     hiddenLayer1 = 256
     hiddenLayer2 = 512
     stateDim = 14
@@ -184,12 +193,9 @@ def main(config):
 
     name = "Harfang_GYM"
 
-    #INITIALIZATION
-    env = HarfangEnv()
-
     start_time = datetime.datetime.now()
     dir = Path.cwd() # 获取工作区路径
-    log_dir = "logs/" + agent_name + "/" + model_name + "/" + "log/" + str(start_time.year)+'_'+str(start_time.month)+'_'+str(start_time.day)+'_'+str(start_time.hour)+'_'+str(start_time.minute)
+    log_dir = "logs/" + env_type + "/" + agent_name + "/" + model_name + "/" + "log/" + str(start_time.year)+'_'+str(start_time.month)+'_'+str(start_time.day)+'_'+str(start_time.hour)+'_'+str(start_time.minute)
     model_dir = os.path.join(log_dir, 'model')
     log_dir = str(dir) + "/" + log_dir # tensorboard文件夹路径
     summary_dir = os.path.join(log_dir, 'summary')
@@ -428,4 +434,5 @@ if __name__=='__main__':
     parser.add_argument('--render', action='store_true')
     parser.add_argument('--plot', action='store_true')
     parser.add_argument('--seed', type=int, default=None)
+    parser.add_argument('--env', type=str, default='straight_line') # serpentine
     main(parser.parse_args())
