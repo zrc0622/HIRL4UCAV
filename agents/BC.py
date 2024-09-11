@@ -1,7 +1,3 @@
-# bc weight的0.03怎么确定：先设为1跑起来后观察二者的loss，再估计一个合适的loss
-# 是否使用随step逐渐降低的权重：可以尝试
-# 什么是finetune
-# 总的任务成功率和return曲线、对比轨迹
 import torch
 import torch.nn as nn
 import torch.optim as optim

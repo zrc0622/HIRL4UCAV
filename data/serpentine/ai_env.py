@@ -1,11 +1,11 @@
 import numpy as np
-import environment.dogfight_client as df
-from Constants import *
+import environments.dogfight_client as df
+from environments.constants import *
 import gym
 import random
 
-from environment.HarfangEnv_GYM import HarfangSerpentineEnv
-from expert_data.straight_line.ai_env import AIHarfangEnv
+from environments.HarfangEnv_GYM import HarfangSerpentineEnv
+from data.straight_line.ai_env import AIHarfangEnv
 
 class AIHarfangSerpentineEnv(HarfangSerpentineEnv, AIHarfangEnv):
     def __init__(self):

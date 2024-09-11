@@ -1,10 +1,10 @@
 import torch
 import argparse
-import environment.dogfight_client as df
+import environments.dogfight_client as df
 import time
-from agent.SAC.agent import SacAgent as SACAgent
+from agents.SAC.agent import SacAgent as SACAgent
 import math
-from environment.HarfangEnv_GYM import *
+from environments.HarfangEnv_GYM import *
 import gym
 from pathlib import Path
 import datetime

@@ -3,7 +3,7 @@ from agents.TD3 import Agent as TD3Agent
 from agents.HIRL import Agent as HIRLAgent
 from agents.BC import Agent as BCAgent
 from utils.plot import draw_dif, draw_pos, plot_dif, plot_dif2, draw_pos2
-from utils.read_data import read_data
+from utils.data_processor import read_data
 from utils.buffer import *
 import numpy as np
 import time

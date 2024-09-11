@@ -1,7 +1,7 @@
-import environment.dogfight_client as df
-from Constants import *
+import environments.dogfight_client as df
+from environments.constants import *
 
-from environment.HarfangEnv_GYM import HarfangEnv
+from environments.HarfangEnv_GYM import HarfangEnv
 
 class AIHarfangEnv(HarfangEnv):
     def __init__(self):

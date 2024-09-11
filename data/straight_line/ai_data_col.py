@@ -1,6 +1,6 @@
-import environment.dogfight_client as df
+import environments.dogfight_client as df
 import time
-from expert_data.straight_line.ai_env import *
+from data.straight_line.ai_env import *
 import numpy as np
 import csv
 

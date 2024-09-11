@@ -13,7 +13,7 @@ from utils.plot import draw_dif, draw_pos, plot_dif, plot_dif2, draw_pos2
 from statistics import mean
 from torch.utils.tensorboard import SummaryWriter
 from rltorch.memory import MultiStepMemory
-from utils.read_data import read_data
+from utils.data_processor import read_data
 
 def get_loc_diff(state):
     loc_diff = (((state[0] * 10000) ** 2) + ((state[1] * 10000) ** 2) + ((state[2] * 10000) ** 2)) ** (1 / 2)
