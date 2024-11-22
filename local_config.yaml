@@ -1,0 +1,12 @@
+experiment:
+  result_dir: results
+  bc_actor_dir: bc_actor
+  bc_actor_name:
+    straight_line: Agent181_100_-4_Harfang_GYM
+    serpentine: Agent77_86_-600_Harfang_GYM
+    circular: Agent119_80_-2314_Harfang_GYM
+  expert_data_dir: expert_data
+
+network:
+  ip: YOUR_IP_ADDRESS # Please replace this placeholder with your own IP address
+
