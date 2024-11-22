@@ -1,4 +1,4 @@
-[**ENGLISH**](README.md) | [**中文**](docs/README_CN.md)
+[**ENGLISH**](README.md) | [**中文**](assets/README_CN.md)
 
 <h1 align='center'> Highly Imitative Reinforcement Learning for UCAV </h1>
 
