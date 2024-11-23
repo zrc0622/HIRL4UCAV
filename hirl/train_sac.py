@@ -478,12 +478,20 @@ def main(config):
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
-    parser.add_argument('--port', type=int, default=None)
-    parser.add_argument('--render', action='store_true')
-    parser.add_argument('--model_name', type=str, default=None)
-    parser.add_argument('--type', type=str, default='ESAC')
-    parser.add_argument('--env', type=str, default='straight_line') # serpentine
-    parser.add_argument('--seed', type=int, default=None)
-    parser.add_argument('--plot', action='store_true')
-    parser.add_argument('--random', action='store_true') # serpentine
+    parser.add_argument('--port', type=int, default=None,
+                        help="The port number for the training environment. Example: 12345.")
+    parser.add_argument('--render', action='store_true',
+                        help="Flag to enable rendering of the environment.")
+    parser.add_argument('--model_name', type=str, default=None,
+                        help="Name of the model to be saved. Example: 'E-SAC'.")
+    parser.add_argument('--type', type=str, default='ESAC',
+                        help="Type of SAC algorithm to use: 'SAC' or 'ESAC'. Default is 'ESAC'.")
+    parser.add_argument('--env', type=str, default='straight_line',
+                        help="Specify the training environment type: 'straight_line', 'serpentine' or 'circular'. Default is 'straight_line'.")
+    parser.add_argument('--seed', type=int, default=None,
+                        help="Random seed for reproducibility. Default is None (no seed).")
+    parser.add_argument('--plot', action='store_true',
+                        help="Flag to plot training metrics. Use this for visualization.")
+    parser.add_argument('--random', action='store_true',
+                        help="Flag to use random initialization in the environment. Default is False.")
     main(parser.parse_args())

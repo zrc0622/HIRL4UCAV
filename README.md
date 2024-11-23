@@ -20,14 +20,23 @@ pip install -e .
 
 ## Usage
 
+### Prerequisites
+Download the `expert_data` and `bc_actor` folders from [Google Drive](https://drive.google.com/drive/folders/1lAllxmsy0MhW714ZmT8fb0MkdJktUxzJ?usp=sharing) and place them in the repository. 
+Update the IP address in the `local_config.yaml` file.
+
+### Run Experiments
+Once the prerequisites are set, you can run experiments using the following command:
+
 ```python
 python hirl/train_all.py --port=<ENV_PORT> --env=<ENV_TYPE> --random --agent=HIRL --type=<HIRL_TYPE> --model_name=<MODEL_NAME>
 ```
 
-- `<ENV_PORT>`: The port number for the training environment (e.g., 12345).
+Replace placeholders with your specific setup.
+
+<!-- - `<ENV_PORT>`: The port number for the training environment (e.g., 12345).
 - `<ENV_TYPE>`: The type of training environment (e.g., "straight_line", "serpentine", "circular").
 - `<HIRL_TYPE>`: The variant of the HIRL algorithm (e.g., "soft", "linear", "fixed").
-- `<MODEL_NAME>`: The name of the trained model to be saved (e.g., "HIRL_soft").
+- `<MODEL_NAME>`: The name of the trained model to be saved (e.g., "HIRL_soft"). -->
 
 ## Citation
 ```

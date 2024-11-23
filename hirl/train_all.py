@@ -526,15 +526,26 @@ def main(config):
     
 if __name__=='__main__':
     parser = argparse.ArgumentParser()
-    parser.add_argument('--agent', type=str, default='HIRL') # 代理：HIRL、TD3
-    parser.add_argument('--port', type=int, default=None)
-    parser.add_argument('--type', type=str, default='linear') # HIRL type：linear、fixed、soft
-    parser.add_argument('--bc_weight', type=float, default=0.5)
-    parser.add_argument('--model_name', type=str, default=None)
-    parser.add_argument('--load_model', action='store_true')
-    parser.add_argument('--render', action='store_true')
-    parser.add_argument('--plot', action='store_true')
-    parser.add_argument('--seed', type=int, default=None)
-    parser.add_argument('--env', type=str, default='straight_line') # serpentine
-    parser.add_argument('--random', action='store_true') # serpentine
+    parser.add_argument('--agent', type=str, default='HIRL', 
+                        help="Specify the agent to use: 'HIRL', 'BC' or 'TD3'. Default is 'HIRL'.")
+    parser.add_argument('--port', type=int, default=None,
+                        help="The port number for the training environment. Example: 12345.")
+    parser.add_argument('--type', type=str, default='soft',
+                        help="Type of HIRL algorithm to use: 'linear', 'fixed', or 'soft'. Default is 'soft'.")
+    parser.add_argument('--bc_weight', type=float, default=0.5,
+                        help="Weight for the behavior cloning (BC) loss. Default is 0.5.")
+    parser.add_argument('--model_name', type=str, default=None,
+                        help="Name of the model to be saved. Example: 'HIRL_soft'.")
+    parser.add_argument('--load_model', action='store_true',
+                        help="Flag to load a pre-trained model. Use this if you want to resume training.")
+    parser.add_argument('--render', action='store_true',
+                        help="Flag to enable rendering of the environment.")
+    parser.add_argument('--plot', action='store_true',
+                        help="Flag to plot training metrics. Use this for visualization.")
+    parser.add_argument('--seed', type=int, default=None,
+                        help="Random seed for reproducibility. Default is None (no seed).")
+    parser.add_argument('--env', type=str, default='straight_line',
+                        help="Specify the training environment type: 'straight_line', 'serpentine' or 'circular'. Default is 'straight_line'.")
+    parser.add_argument('--random', action='store_true',
+                        help="Flag to use random initialization in the environment. Default is False.")
     main(parser.parse_args())
