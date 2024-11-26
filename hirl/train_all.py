@@ -181,7 +181,7 @@ def main(config):
     with open('local_config.yaml', 'r') as file:
         local_config = yaml.safe_load(file)
 
-    if config['network']['ip'] == 'YOUR_IP_ADDRESS':
+    if local_config['network']['ip'] == 'YOUR_IP_ADDRESS':
         raise ValueError("Please update the 'network.ip' field in config.yaml with your own IP address.")
 
     df.connect(local_config["network"]["ip"], port)
