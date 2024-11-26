@@ -4,7 +4,7 @@ import torch.optim as optim
 import torch.nn.functional as F
 import torchvision.transforms as T
 import numpy as np
-from utils.buffer import *
+from hirl.utils.buffer import *
 
 # model_name = 'new_pursue_model/rlbc2'
 
@@ -100,7 +100,7 @@ class Critic(nn.Module):
         torch.save(self.state_dict(), model_name + '\\{}'.format(ajan) + self.name)
         
     def loadCheckpoint(self,ajan,model_name):
-        self.load_state_dict(torch.load(model_name + '\\{}'.format(ajan)  + self.name))
+        self.load_state_dict(torch.load(model_name + '\\{}'.format(ajan)  + self.name, map_location=self.device))
             
 class Actor(nn.Module):
     def __init__(self, lr, stateDim, nActions, full1Dim, full2Dim, layerNorm, name):
@@ -143,12 +143,14 @@ class Actor(nn.Module):
         torch.save(self.state_dict(), model_name + '\\{}'.format(ajan)  + self.name)
         
     def loadCheckpoint(self,ajan,model_name):
-        self.load_state_dict(torch.load(model_name + '\\{}'.format(ajan) + self.name))
+        self.load_state_dict(torch.load(model_name + '\\{}'.format(ajan) + self.name, map_location=self.device))
     
 class Agent(nn.Module):
     def __init__(self, actorLR, criticLR, stateDim, actionDim,full1Dim,full2Dim, tau, gamma, bufferSize, batchSize,\
                  layerNorm, name, expert_states, expert_actions, bc_weight, expert_warm_up):
         super(Agent,self).__init__()
+
+        self.device = device or torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
         
         self.tau = tau
         self.gamma = gamma
@@ -167,15 +169,15 @@ class Agent(nn.Module):
         print(f"upsample expert data num is {np.size(self.target_indices)}")
         self.update_count = 0
         
-        self.actor = Actor(actorLR,stateDim,actionDim, full1Dim, full2Dim, layerNorm, 'Actor_'+name)
-        self.targetActor = Actor(actorLR,stateDim,actionDim, full1Dim, full2Dim, layerNorm, 'TargetActor_'+name)
+        self.actor = Actor(actorLR,stateDim,actionDim, full1Dim, full2Dim, layerNorm, 'Actor_'+name).to(self.device)
+        self.targetActor = Actor(actorLR,stateDim,actionDim, full1Dim, full2Dim, layerNorm, 'TargetActor_'+name).to(self.device)
         hard_update(self.targetActor, self.actor)
         
-        self.critic = Critic(criticLR, stateDim, actionDim, full1Dim, full2Dim, layerNorm, 'Critic_'+name)
-        self.targetCritic = Critic(criticLR, stateDim, actionDim, full1Dim, full2Dim, layerNorm, 'TargetCritic_'+name)
+        self.critic = Critic(criticLR, stateDim, actionDim, full1Dim, full2Dim, layerNorm, 'Critic_'+name).to(self.device)
+        self.targetCritic = Critic(criticLR, stateDim, actionDim, full1Dim, full2Dim, layerNorm, 'TargetCritic_'+name).to(self.device)
         hard_update(self.targetCritic, self.critic)
 
-        self.bc_actor = Actor(actorLR,stateDim,actionDim, full1Dim, full2Dim, layerNorm, name)
+        self.bc_actor = Actor(actorLR,stateDim,actionDim, full1Dim, full2Dim, layerNorm, name).to(self.device)
         
         self.loss_lambda = 10000
         self.target_update_freq = 3
