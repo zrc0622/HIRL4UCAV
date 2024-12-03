@@ -13,8 +13,11 @@ Please follow [the official instructions](https://github.com/harfang3d/dogfight-
 ### Install HIRL
 
 ```shell
+conda create -n hirl python=3.8
+conda activate hirl
 git clone https://github.com/zrc0622/HIRL4UCAV.git
 cd HIRL4UCAV
+conda install pytorch==1.13.0 torchvision==0.14.0 torchaudio==0.13.0 pytorch-cuda=11.7 -c pytorch -c nvidia
 pip install -e .
 ```
 
