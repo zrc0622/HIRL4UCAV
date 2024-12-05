@@ -2,6 +2,7 @@
 
 <h1 align='center'> Highly Imitative Reinforcement Learning for UCAV </h1>
 
+This is the implementation of "An Imitative Reinforcement Learning Framework for Autonomous Dogfight".
 The expert dataset, the trained models, and recorded videos of the learned policies are available at [Google Drive](https://drive.google.com/drive/folders/1lAllxmsy0MhW714ZmT8fb0MkdJktUxzJ?usp=sharing).
 
 ## Installation
@@ -41,7 +42,22 @@ Replace placeholders with your specific setup.
 - `<HIRL_TYPE>`: The variant of the HIRL algorithm (e.g., "soft", "linear", "fixed").
 - `<MODEL_NAME>`: The name of the trained model to be saved (e.g., "HIRL_soft"). -->
 
+## Performance
+
+### Comparative Results
+
+<div align="center">
+  <img src="./assets/fig1.png" width="100%"/>
+</div>
+
+### Policy Trajectories
+
+<div align="center">
+  <img src="./assets/fig2.png" width="100%"/>
+</div>
+
 ## Citation
+
 ```
 @misc{li2024imitative,
     title={An Imitative Reinforcement Learning Framework for Autonomous Dogfight}, 
