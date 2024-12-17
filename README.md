@@ -11,6 +11,8 @@ The expert dataset, the trained models, and recorded videos of the learned polic
 
 Please follow [the official instructions](https://github.com/harfang3d/dogfight-sandbox-hg2) to install Dogfight Sandbox.
 
+<!-- Alternatively, installation can also be done directly from one of the following links: [Link 1](https://github.com/harfang3d/dogfight-sandbox-hg2/releases/download/v1.3.1/dogfight-sandbox-hg2.zip) or [Link 2](https://drive.google.com/file/d/1FihtrwnwGt0FXaVlGS4881yN3oYpbdlw/view?usp=drive_link). -->
+
 ### Install HIRL
 
 ```shell
