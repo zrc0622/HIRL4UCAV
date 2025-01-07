@@ -120,7 +120,7 @@ def main(config):
         maxStep = 1500 # 6000
         validationStep = 1500 # 6000
         
-        env = HarfangEnvBeta2New()
+        env = HarfangEnv()
 
     elif env_type == "serpentine":
         print("env is harfang serpentine")
@@ -130,7 +130,7 @@ def main(config):
         maxStep = 1500 # 6000
         validationStep = 1500 # 6000
             
-        env = HarfangSerpentineEnvNew()
+        env = HarfangSerpentineEnv()
 
     elif env_type == "circular":
         print("env is harfang circular")
@@ -140,7 +140,7 @@ def main(config):
         maxStep = 1900 # 6000
         validationStep = 1900 # 6000
             
-        env = HarfangCircularEnvNew()
+        env = HarfangCircularEnv()
 
     df.set_renderless_mode(render)
     df.set_client_update_mode(True)

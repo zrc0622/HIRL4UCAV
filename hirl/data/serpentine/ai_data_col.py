@@ -10,7 +10,7 @@ from hirl.utils.plot import plot_2d_trajectories
 with open('local_config.yaml', 'r') as file:
     local_config = yaml.safe_load(file)
 
-df.connect(local_config["network"]["ip"], 13579) # 连接环境
+df.connect(local_config["network"]["ip"], 11111) # 连接环境
 time.sleep(2) # 等待连接
 df.disable_log() # 关闭日志
 df.set_renderless_mode(True) # 关闭渲染模式
@@ -20,12 +20,12 @@ planes = df.get_planes_list()
 plane_id = planes[0]
 oppo_id = planes[3]
 
-env = AIHarfangSerpentineEnv()
+env = AIHarfangSerpentineEnvRandom()
 env.Plane_ID_ally = plane_id # ally 1
 env.Plane_ID_oppo = oppo_id # ennemy_2
 
 
-state_dim = 19
+state_dim = 13
 action_dim = 4
 state_list = []
 action_list = []
@@ -35,7 +35,7 @@ episode = 1
 step = 0
 invalid_data = 0
 
-while episode <= 10:
+while episode <= 20:
     env.reset()
     df.activate_IA(plane_id)
     health = 1
@@ -56,11 +56,10 @@ while episode <= 10:
         state = env._get_observation()
         temp_state_list.append(state) 
         
-        if state[10]>0 and state[11]>0:
-            probability = random.random()
-            if probability < 0.3 and not done:
-                env.fire()
-                done = True
+        env.set_ennemy_yaw()
+
+        if state[7]>0 and state[8]>0:
+            env.fire()
 
             if lock == 0:
                 lock = episode_step
@@ -69,8 +68,6 @@ while episode <= 10:
 
         action = env._get_action()
         temp_action_list.append(action)
-
-        env.set_ennemy_yaw()
 
         pos = env.get_pos()
         ally_pos.append(pos)
@@ -94,7 +91,7 @@ while episode <= 10:
         action_list.extend(temp_action_list)
         delt_list.append(fire-lock)
         print("read")
-        plot_2d_trajectories(ally_pos, ennemy_pos, save_path=f"hirl/data/serpentine/plot/{episode}.png")
+    plot_2d_trajectories(ally_pos, ennemy_pos, save_path=f"hirl/data/serpentine/plot/{episode}.png")
 
     print(f"episode = {episode}  step = {episode_step}  delt = {fire-lock}")
     episode += 1
@@ -106,7 +103,7 @@ action_array = np.array(action_list)
 state_array = np.array(state_list)
 data = [state_array, action_array]
 
-filename = 'hirl/data/serpentine/expert_data_ai_small.csv'
+filename = 'hirl/data/serpentine/expert_data_ai_random_small_delta0.csv'
 
 with open(filename, 'w', newline='') as file:  # 打开CSV文件，注意要指定newline=''以避免空行
     writer = csv.writer(file)

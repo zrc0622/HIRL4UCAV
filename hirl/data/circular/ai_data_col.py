@@ -20,7 +20,7 @@ planes = df.get_planes_list()
 plane_id = planes[0]
 oppo_id = planes[3]
 
-env = AIHarfangCircularEnvNewRandom()
+env = AIHarfangCircularEnvRandom()
 env.Plane_ID_ally = plane_id # ally 1
 env.Plane_ID_oppo = oppo_id # ennemy_2
 

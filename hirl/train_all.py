@@ -19,7 +19,7 @@ import argparse
 import yaml
 from torch.utils.tensorboard import SummaryWriter
 
-def validate(validationEpisodes, env:HarfangEnvBeta2New, validationStep, agent:HIRLAgent, plot, plot_dir, arttir, model_dir, episode, checkpointRate, tensor_writer:SummaryWriter, highScore, successRate, if_random):          
+def validate(validationEpisodes, env:HarfangEnv, validationStep, agent:HIRLAgent, plot, plot_dir, arttir, model_dir, episode, checkpointRate, tensor_writer:SummaryWriter, highScore, successRate, if_random):          
     success = 0
     fire_success = 0
     valScores = []
@@ -104,7 +104,7 @@ def validate(validationEpisodes, env:HarfangEnvBeta2New, validationStep, agent:H
 
     return highScore, successRate
 
-def random_validate(validationEpisodes, env:HarfangEnvBeta2, validationStep, agent:HIRLAgent, plot, plot_dir, arttir, model_dir, episode, checkpointRate, tensor_writer:SummaryWriter, highScore, successRate):          
+def random_validate(validationEpisodes, env:HarfangEnv, validationStep, agent:HIRLAgent, plot, plot_dir, arttir, model_dir, episode, checkpointRate, tensor_writer:SummaryWriter, highScore, successRate):          
     t_fire_success = []
     t_valScores = []
     for _ in range(5):
@@ -200,7 +200,7 @@ def main(config):
         maxStep = 1500 # 6000
         validationStep = 1500 # 6000
         
-        env = HarfangEnvBeta2New()
+        env = HarfangEnv()
 
     elif env_type == "serpentine":
         print("env is harfang serpentine")
@@ -210,7 +210,7 @@ def main(config):
         maxStep = 1500 # 6000
         validationStep = 1500 # 6000
             
-        env = HarfangSerpentineEnvNew()
+        env = HarfangSerpentineEnv()
 
     elif env_type == "circular":
         print("env is harfang circular")
@@ -220,7 +220,7 @@ def main(config):
         maxStep = 1900 # 6000
         validationStep = 1900 # 6000
             
-        env = HarfangCircularEnvNew()
+        env = HarfangCircularEnv()
 
     df.set_renderless_mode(render)
     df.set_client_update_mode(True)

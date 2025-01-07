@@ -1,15 +1,10 @@
-from hirl.environments.HarfangEnv_GYM import HarfangSerpentineEnv, HarfangSerpentineEnvNew
-from hirl.data.straight_line.ai_env import AIHarfangEnv
+from hirl.environments.HarfangEnv_GYM import HarfangSerpentineEnv
 import hirl.environments.dogfight_client as df
 import random
 
-class AIHarfangSerpentineEnv(HarfangSerpentineEnv, AIHarfangEnv):
+class AIHarfangSerpentineEnv(HarfangSerpentineEnv):
     def __init__(self):
         super(AIHarfangSerpentineEnv, self).__init__()
-
-class AIHarfangSerpentineEnvNew(HarfangSerpentineEnvNew):
-    def __init__(self):
-        super(AIHarfangSerpentineEnvNew, self).__init__()
 
     def _get_health(self):
         state = df.get_plane_state(self.Plane_ID_oppo)
@@ -37,9 +32,9 @@ class AIHarfangSerpentineEnvNew(HarfangSerpentineEnvNew):
     def fire(self):
         df.fire_missile(self.Plane_ID_ally, 0)
 
-class AIHarfangSerpentineEnvNewRandom(AIHarfangSerpentineEnvNew):
+class AIHarfangSerpentineEnvRandom(AIHarfangSerpentineEnv):
     def __init__(self):
-        super(AIHarfangSerpentineEnvNewRandom, self).__init__()
+        super(AIHarfangSerpentineEnvRandom, self).__init__()
 
     def _reset_machine(self):
         self.reset_ennemy()

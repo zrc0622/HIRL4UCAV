@@ -1,10 +1,10 @@
-from hirl.environments.HarfangEnv_GYM import HarfangCircularEnvNew
+from hirl.environments.HarfangEnv_GYM import HarfangCircularEnv
 import hirl.environments.dogfight_client as df
 import random
 
-class AIHarfangCircularEnvNew(HarfangCircularEnvNew):
+class AIHarfangCircularEnv(HarfangCircularEnv):
     def __init__(self):
-        super(AIHarfangCircularEnvNew, self).__init__()
+        super(AIHarfangCircularEnv, self).__init__()
 
     def _get_health(self):
         state = df.get_plane_state(self.Plane_ID_oppo)
@@ -32,9 +32,9 @@ class AIHarfangCircularEnvNew(HarfangCircularEnvNew):
     def fire(self):
         df.fire_missile(self.Plane_ID_ally, 0)
 
-class AIHarfangCircularEnvNewRandom(AIHarfangCircularEnvNew):
+class AIHarfangCircularEnvRandom(AIHarfangCircularEnv):
     def __init__(self):
-        super(AIHarfangCircularEnvNewRandom, self).__init__()
+        super(AIHarfangCircularEnvRandom, self).__init__()
 
     def _reset_machine(self):
         self.reset_ennemy()
