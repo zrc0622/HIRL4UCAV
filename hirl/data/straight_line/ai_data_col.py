@@ -93,7 +93,7 @@ while episode <= 20:
         action_list.extend(temp_action_list)
         delt_list.append(fire-lock)
         print("read")
-    plot_2d_trajectories(ally_pos, ennemy_pos, save_path=f"hirl/data/straight_line/plot/{episode}.png")
+    plot_2d_trajectories(ally_pos, ennemy_pos, save_path=f"expert_data/straight_line/plot/{episode}.png")
 
     print(f"episode = {episode}  step = {episode_step}  delt = {fire-lock}")
     episode += 1
@@ -105,8 +105,8 @@ action_array = np.array(action_list)
 state_array = np.array(state_list)
 data = [state_array, action_array]
 
-if if_random: filename = 'hirl/data/straight_line/expert_data_ai_random.csv'
-else: filename = 'hirl/data/straight_line/expert_data_ai.csv'
+if if_random: filename = 'expert_data/straight_line/expert_data_ai_random.csv'
+else: filename = 'expert_data/straight_line/expert_data_ai.csv'
 
 with open(filename, 'w', newline='') as file:  # 打开CSV文件，注意要指定newline=''以避免空行
     writer = csv.writer(file)

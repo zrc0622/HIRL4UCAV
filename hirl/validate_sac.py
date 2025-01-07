@@ -23,7 +23,7 @@ import yaml
 import statistics
 from torch.utils.tensorboard import SummaryWriter
 
-def validate(validationEpisodes, env:HarfangSerpentineInfiniteEnv, validationStep, agent, if_random=True):
+def validate(validationEpisodes, env:HarfangSerpentineInfiniteEnv, validationStep, agent, if_random=True, if_infinite=True):
     env.infinite_total_success = 0
     env.infinite_total_fire = 0
     success = 0
@@ -71,7 +71,10 @@ def validate(validationEpisodes, env:HarfangSerpentineInfiniteEnv, validationSte
 
         valScores.append(totalReward)
     
-    return mean(valScores), fire_success/validationEpisodes, env.infinite_total_success/env.infinite_total_fire
+    if if_infinite:
+        return mean(valScores), fire_success/validationEpisodes, env.infinite_total_success/env.infinite_total_fire
+    else:
+        return mean(valScores), fire_success/validationEpisodes, 0
 
 def main(config):
     print('gpu is ' + str(torch.cuda.is_available()))
@@ -158,8 +161,8 @@ def main(config):
 
     agent.policy.load('./result/serpentine/SAC/esac_random_1/log/2024_11_2_19_40/model/policy_Agent42_100_19_.pth')
 
-    infinite = config.infinite
-    if infinite: 
+    if_infinite = config.infinite
+    if if_infinite: 
         env = HarfangSerpentineInfiniteEnv()
         validationStep = 1200
     else:
@@ -171,15 +174,15 @@ def main(config):
     successrate_list = []
     fire_list = []
     for _ in tqdm(range(nums)):
-        r, s, f = validate(validationEpisodes, env, validationStep, agent, if_random) 
+        r, s, f = validate(validationEpisodes, env, validationStep, agent, if_random, if_infinite) 
         return_list.append(r)
         successrate_list.append(s)
         fire_list.append(f)
-    if not infinite:
-        print(statistics.mean(return_list), statistics.stdev(return_list))
-        print(statistics.mean(successrate_list), statistics.stdev(successrate_list))
-    else:
+    if if_infinite:
         print(statistics.mean(fire_list), statistics.stdev(fire_list))
+    else:
+        print(statistics.mean(return_list), statistics.stdev(return_list))
+        print(statistics.mean(successrate_list), statistics.stdev(successrate_list))    
     
 
 if __name__ == '__main__':
