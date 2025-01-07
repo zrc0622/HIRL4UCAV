@@ -98,48 +98,8 @@ def validate(validationEpisodes, env:HarfangEnv, validationStep, agent:HIRLAgent
     tensor_writer.add_scalar('Validation/Std Reward', pstdev(valScores), episode)
     tensor_writer.add_scalar('Validation/Success Rate', success/validationEpisodes, episode)
     tensor_writer.add_scalar('Validation/Fire Success Rate', fire_success/validationEpisodes, episode)
-    
-    if success / validationEpisodes >= 0.5 and not if_random:
-        random_validate(validationEpisodes, env, validationStep, agent, plot, plot_dir, arttir, model_dir, episode, checkpointRate, tensor_writer, highScore, successRate)
 
     return highScore, successRate
-
-def random_validate(validationEpisodes, env:HarfangEnv, validationStep, agent:HIRLAgent, plot, plot_dir, arttir, model_dir, episode, checkpointRate, tensor_writer:SummaryWriter, highScore, successRate):          
-    t_fire_success = []
-    t_valScores = []
-    for _ in range(5):
-        success = 0
-        fire_success = 0
-        valScores = []
-        for _ in range(validationEpisodes):
-            state = env.random_reset()
-            totalReward = 0
-            done = False
-            for step in range(validationStep):
-                if not done:
-                    action = agent.chooseActionNoNoise(state)
-                    n_state, reward, done, info, iffire, beforeaction, afteraction, locked, step_success = env.step_test(action)
-                    state = n_state
-                    totalReward += reward
-
-                    if step == validationStep - 1:
-                        break
-
-                elif done:
-                    if env.episode_success:
-                        success += 1
-                    if env.fire_success:
-                        fire_success += 1
-                    break
-
-            valScores.append(totalReward)
-        t_valScores.append(mean(valScores))
-        t_fire_success.append(fire_success/validationEpisodes)
-
-    tensor_writer.add_scalar('Random_Validation/Mean Reward', mean(t_valScores), episode)
-    tensor_writer.add_scalar('Random_Validation/Std Reward', pstdev(t_valScores), episode)
-    tensor_writer.add_scalar('Random_Validation/Mean Fire Success Rate', mean(t_fire_success), episode)
-    tensor_writer.add_scalar('Random_Validation/Std Fire Success Rate', pstdev(t_fire_success), episode)
 
 def save_parameters_to_txt(log_dir, **kwargs):
     # os.makedirs(log_dir)
@@ -246,7 +206,7 @@ def main(config):
     bc_warm_up_weight = 0 # 不能动
 
     if if_random: data_dir = local_config['experiment']['expert_data_dir'] + f'/{env_type}/expert_data_ai_random.csv'
-    elif not if_random: data_dir = f'hirl/data/{env_type}/expert_data_ai_fixed_small_delta0.csv'
+    elif not if_random: data_dir = local_config['experiment']['expert_data_dir'] + f'hirl/data/{env_type}/expert_data_ai.csv'
 
     start_time = datetime.datetime.now()
     log_dir = local_config["experiment"]["result_dir"] + "/" + env_type + "/" + agent_name + "/" + model_name + "/" + str(start_time.year)+'_'+str(start_time.month)+'_'+str(start_time.day)+'_'+str(start_time.hour)+'_'+str(start_time.minute)

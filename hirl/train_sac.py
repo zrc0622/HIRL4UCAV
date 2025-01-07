@@ -102,9 +102,6 @@ def validate(validationEpisodes, env:HarfangEnv, validationStep, agent:SACAgent,
     tensor_writer.add_scalar('Validation/Success Rate', success/validationEpisodes, episode)
     tensor_writer.add_scalar('Validation/Fire Success Rate', fire_success/validationEpisodes, episode)
     
-    if success / validationEpisodes >= 0.5 and not if_random:
-        random_validate(validationEpisodes, env, validationStep, agent, plot, plot_dir, arttir, model_dir, episode, checkpointRate, tensor_writer, highScore, successRate)
-
     return highScore, successRate
 
 def random_validate(validationEpisodes, env:HarfangEnv, validationStep, agent:SACAgent, plot, plot_dir, arttir, model_dir, episode, checkpointRate, tensor_writer:SummaryWriter, highScore, successRate):          
@@ -242,7 +239,7 @@ def main(config):
     warm_up_rate = 20
 
     if if_random: data_dir = local_config['experiment']['expert_data_dir'] + f'/{env_type}/expert_data_ai_random.csv'
-    elif not if_random: data_dir = f'hirl/data/{env_type}/expert_data_ai_fixed_small_delta0.csv'
+    elif not if_random: data_dir = local_config['experiment']['expert_data_dir'] + f'hirl/data/{env_type}/expert_data_ai.csv'
 
     start_time = datetime.datetime.now()
 

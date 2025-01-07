@@ -21,7 +21,7 @@ import argparse
 import yaml
 from torch.utils.tensorboard import SummaryWriter
 
-def validate(validationEpisodes, env:HarfangSerpentineInfinite, validationStep, agent:HIRLAgent, if_random = True):
+def validate(validationEpisodes, env:HarfangSerpentineInfinite, validationStep, agent:HIRLAgent, if_random=True):
     env.infinite_total_success = 0
     env.infinite_total_fire = 0
     success = 0
@@ -88,7 +88,7 @@ def main(config):
         print("random")
     else:
         print("fixed")
-    if_random = True
+    if_random = config.random
 
     if config.seed is not None:
         set_seed(config.seed)
@@ -164,7 +164,7 @@ def main(config):
     warm_up_rate = 10
 
     if if_random: data_dir = local_config['experiment']['expert_data_dir'] + f'/{env_type}/expert_data_ai_random.csv'
-    elif not if_random: data_dir = f'hirl/data/{env_type}/expert_data_ai_fixed_small_delta0.csv'
+    elif not if_random: data_dir = local_config['experiment']['expert_data_dir'] + f'hirl/data/{env_type}/expert_data_ai.csv'
 
     if agent_name == 'HIRL':
         expert_states, expert_actions = read_data(data_dir)
@@ -190,7 +190,7 @@ def main(config):
     successrate_list = []
     fire_list = []
     for _ in tqdm(range(nums)):
-        r, s, f = validate(validationEpisodes, env, validationStep, agent) 
+        r, s, f = validate(validationEpisodes, env, validationStep, agent, if_random) 
         return_list.append(r)
         successrate_list.append(s)
         fire_list.append(f)

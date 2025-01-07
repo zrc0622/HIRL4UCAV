@@ -31,17 +31,3 @@ class AIHarfangCircularEnv(HarfangCircularEnv):
     
     def fire(self):
         df.fire_missile(self.Plane_ID_ally, 0)
-
-class AIHarfangCircularEnvRandom(AIHarfangCircularEnv):
-    def __init__(self):
-        super(AIHarfangCircularEnvRandom, self).__init__()
-
-    def _reset_machine(self):
-        self.reset_ennemy()
-        self.oppo_health = 0.2 # gai
-
-        df.reset_machine(self.Plane_ID_ally)
-        df.reset_machine_matrix(self.Plane_ID_ally, 0+random.randint(-100, 100), 3500+random.randint(-100, 100), -4000+random.randint(-100, 100), 0, 0, 0)
-        df.set_plane_thrust(self.Plane_ID_ally, 1)
-        df.set_plane_linear_speed(self.Plane_ID_ally, 300)
-        df.retract_gear(self.Plane_ID_ally)

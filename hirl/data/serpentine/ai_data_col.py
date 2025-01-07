@@ -20,7 +20,7 @@ planes = df.get_planes_list()
 plane_id = planes[0]
 oppo_id = planes[3]
 
-env = AIHarfangSerpentineEnvRandom()
+env = AIHarfangSerpentineEnv()
 env.Plane_ID_ally = plane_id # ally 1
 env.Plane_ID_oppo = oppo_id # ennemy_2
 
@@ -35,8 +35,12 @@ episode = 1
 step = 0
 invalid_data = 0
 
+if_random = True
+
 while episode <= 20:
-    env.reset()
+    if if_random: env.random_reset()
+    else: env.reset()
+    
     df.activate_IA(plane_id)
     health = 1
     
@@ -103,7 +107,8 @@ action_array = np.array(action_list)
 state_array = np.array(state_list)
 data = [state_array, action_array]
 
-filename = 'hirl/data/serpentine/expert_data_ai_random_small_delta0.csv'
+if if_random: filename = 'hirl/data/serpentine/expert_data_ai_random.csv'
+else: filename = 'hirl/data/serpentine/expert_data_ai.csv'
 
 with open(filename, 'w', newline='') as file:  # 打开CSV文件，注意要指定newline=''以避免空行
     writer = csv.writer(file)

@@ -23,7 +23,7 @@ import yaml
 import statistics
 from torch.utils.tensorboard import SummaryWriter
 
-def validate(validationEpisodes, env:HarfangSerpentineInfinite, validationStep, agent, if_random = True):
+def validate(validationEpisodes, env:HarfangSerpentineInfinite, validationStep, agent, if_random=True):
     env.infinite_total_success = 0
     env.infinite_total_fire = 0
     success = 0
@@ -151,7 +151,7 @@ def main(config):
     warm_up_rate = 20
 
     if if_random: data_dir = local_config['experiment']['expert_data_dir'] + f'/{env_type}/expert_data_ai_random.csv'
-    elif not if_random: data_dir = f'hirl/data/{env_type}/expert_data_ai_fixed_small_delta0.csv'
+    elif not if_random: data_dir = local_config['experiment']['expert_data_dir'] + f'hirl/data/{env_type}/expert_data_ai.csv'
 
     agent = SACAgent(observation_space=state_space, action_space=action_space, log_dir=None, batch_size=batchSize, lr=actorLR, hidden_units = [hiddenLayer1, hiddenLayer2],
                      memory_size=bufferSize, gamma=gamma, tau=tau)
@@ -168,7 +168,7 @@ def main(config):
     successrate_list = []
     fire_list = []
     for _ in tqdm(range(nums)):
-        r, s, f = validate(validationEpisodes, env, validationStep, agent) 
+        r, s, f = validate(validationEpisodes, env, validationStep, agent, if_random) 
         return_list.append(r)
         successrate_list.append(s)
         fire_list.append(f)

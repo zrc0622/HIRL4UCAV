@@ -31,22 +31,3 @@ class AIHarfangEnv(HarfangEnv):
     
     def fire(self):
         df.fire_missile(self.Plane_ID_ally, 0)
-
-class AIHarfangEnvRandom(AIHarfangEnv):
-    def __init__(self):
-        super(AIHarfangEnvRandom, self).__init__()
-    
-    def _reset_machine(self):
-        df.reset_machine("ally_1") # 初始化两个飞机
-        df.reset_machine("ennemy_2")
-        df.set_health("ennemy_2", 0.2) # 设置的为健康水平，即血量/100
-        self.oppo_health = 0.2 #
-        df.reset_machine_matrix(self.Plane_ID_oppo, 0, 4200, 0, 0, 0, 0)
-        df.reset_machine_matrix(self.Plane_ID_ally, 0+random.randint(-100, 100), 3500+random.randint(-100, 100), -4000+random.randint(-100, 100), 0, 0, 0)
-
-        df.set_plane_thrust(self.Plane_ID_ally, 1)
-        df.set_plane_thrust(self.Plane_ID_oppo, 0.6)
-        df.set_plane_linear_speed(self.Plane_ID_ally, 300)
-        df.set_plane_linear_speed(self.Plane_ID_oppo, 200)
-        df.retract_gear(self.Plane_ID_ally)
-        df.retract_gear(self.Plane_ID_oppo)
