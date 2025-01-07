@@ -21,7 +21,7 @@ import argparse
 import yaml
 from torch.utils.tensorboard import SummaryWriter
 
-def validate(validationEpisodes, env:HarfangSerpentineInfinite, validationStep, agent:HIRLAgent, if_random=True):
+def validate(validationEpisodes, env:HarfangSerpentineInfiniteEnv, validationStep, agent:HIRLAgent, if_random=True):
     env.infinite_total_success = 0
     env.infinite_total_fire = 0
     success = 0
@@ -180,9 +180,12 @@ def main(config):
     model_dir = 'B:/code/HIRL4UCAV/TAAS_After_Revision/result/straight_line/HIRL/hirl_random_5/2024_11_12_10_41/model'
     model_name = 'Agent55_100_5_'
     agent.loadCheckpoints(model_name, model_dir)
-    infinite = True
+    infinite = config.infinite
     if infinite: 
-        env = HarfangSerpentineInfinite()
+        env = HarfangSerpentineInfiniteEnv()
+        validationStep = 1200
+    else:
+        env = HarfangSerpentineEnv()
         validationStep = 1200
 
     nums = 2
@@ -214,6 +217,7 @@ if __name__=='__main__':
     parser.add_argument('--seed', type=int, default=None)
     parser.add_argument('--env', type=str, default='straight_line') # serpentine
     parser.add_argument('--random', action='store_true') # serpentine
+    parser.add_argument('--infinite', action='store_true')
     main(parser.parse_args())
 
-# python hirl/validate_all.py --agent HIRL --port 54321 --type soft --env serpentine
+# python hirl/validate_all.py --agent HIRL --port 54321 --type soft --env serpentine --random --infinite

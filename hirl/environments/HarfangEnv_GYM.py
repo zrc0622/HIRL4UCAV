@@ -473,9 +473,9 @@ class HarfangCircularEnv(HarfangEnv):
         df.set_plane_linear_speed(self.Plane_ID_oppo, 290)
         df.retract_gear(self.Plane_ID_oppo)
 
-class HarfangSerpentineInfinite(HarfangSerpentineEnv):
+class HarfangSerpentineInfiniteEnv(HarfangSerpentineEnv):
     def __init__(self):
-        super(HarfangSerpentineInfinite, self).__init__()
+        super(HarfangSerpentineInfiniteEnv, self).__init__()
         self.infinite_total_success = 0
         self.infinite_total_fire = 0
         self.infinite_total_step = 0

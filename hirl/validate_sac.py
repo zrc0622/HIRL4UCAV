@@ -23,7 +23,7 @@ import yaml
 import statistics
 from torch.utils.tensorboard import SummaryWriter
 
-def validate(validationEpisodes, env:HarfangSerpentineInfinite, validationStep, agent, if_random=True):
+def validate(validationEpisodes, env:HarfangSerpentineInfiniteEnv, validationStep, agent, if_random=True):
     env.infinite_total_success = 0
     env.infinite_total_fire = 0
     success = 0
@@ -158,9 +158,12 @@ def main(config):
 
     agent.policy.load('./result/serpentine/SAC/esac_random_1/log/2024_11_2_19_40/model/policy_Agent42_100_19_.pth')
 
-    infinite = True
+    infinite = config.infinite
     if infinite: 
-        env = HarfangSerpentineInfinite()
+        env = HarfangSerpentineInfiniteEnv()
+        validationStep = 1200
+    else:
+        env = HarfangSerpentineEnv()
         validationStep = 1200
 
     nums = 2
@@ -189,4 +192,5 @@ if __name__ == '__main__':
     parser.add_argument('--seed', type=int, default=None)
     parser.add_argument('--plot', action='store_true')
     parser.add_argument('--random', action='store_true') # serpentine
+    parser.add_argument('--infinite', action='store_true') # serpentine
     main(parser.parse_args())
