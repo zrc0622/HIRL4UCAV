@@ -201,7 +201,7 @@ def main(config):
     warm_up_rate = 20
 
     if if_random: data_dir = local_config['experiment']['expert_data_dir'] + f'/{env_type}/expert_data_ai_random.csv'
-    elif not if_random: data_dir = local_config['experiment']['expert_data_dir'] + f'hirl/data/{env_type}/expert_data_ai.csv'
+    elif not if_random: data_dir = local_config['experiment']['expert_data_dir'] + f'/{env_type}/expert_data_ai.csv'
 
     start_time = datetime.datetime.now()
 

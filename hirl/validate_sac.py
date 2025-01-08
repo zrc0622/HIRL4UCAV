@@ -154,7 +154,7 @@ def main(config):
     warm_up_rate = 20
 
     if if_random: data_dir = local_config['experiment']['expert_data_dir'] + f'/{env_type}/expert_data_ai_random.csv'
-    elif not if_random: data_dir = local_config['experiment']['expert_data_dir'] + f'hirl/data/{env_type}/expert_data_ai.csv'
+    elif not if_random: data_dir = local_config['experiment']['expert_data_dir'] + f'/{env_type}/expert_data_ai.csv'
 
     agent = SACAgent(observation_space=state_space, action_space=action_space, log_dir=None, batch_size=batchSize, lr=actorLR, hidden_units = [hiddenLayer1, hiddenLayer2],
                      memory_size=bufferSize, gamma=gamma, tau=tau)

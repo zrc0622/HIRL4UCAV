@@ -206,7 +206,7 @@ def main(config):
     bc_warm_up_weight = 0 # 不能动
 
     if if_random: data_dir = local_config['experiment']['expert_data_dir'] + f'/{env_type}/expert_data_ai_random.csv'
-    elif not if_random: data_dir = local_config['experiment']['expert_data_dir'] + f'hirl/data/{env_type}/expert_data_ai.csv'
+    elif not if_random: data_dir = local_config['experiment']['expert_data_dir'] + f'/{env_type}/expert_data_ai.csv'
 
     start_time = datetime.datetime.now()
     log_dir = local_config["experiment"]["result_dir"] + "/" + env_type + "/" + agent_name + "/" + model_name + "/" + str(start_time.year)+'_'+str(start_time.month)+'_'+str(start_time.day)+'_'+str(start_time.hour)+'_'+str(start_time.minute)

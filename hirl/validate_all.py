@@ -167,7 +167,7 @@ def main(config):
     warm_up_rate = 10
 
     if if_random: data_dir = local_config['experiment']['expert_data_dir'] + f'/{env_type}/expert_data_ai_random.csv'
-    elif not if_random: data_dir = local_config['experiment']['expert_data_dir'] + f'hirl/data/{env_type}/expert_data_ai.csv'
+    elif not if_random: data_dir = local_config['experiment']['expert_data_dir'] + f'/{env_type}/expert_data_ai.csv'
 
     if agent_name == 'HIRL':
         expert_states, expert_actions = read_data(data_dir)
