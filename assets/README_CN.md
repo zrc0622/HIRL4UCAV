@@ -2,7 +2,7 @@
 
 <h1 align='center'> 基于高模仿性强化学习的无人机空战 </h1>
 
-本项目是论文《An Imitative Reinforcement Learning Framework for Autonomous Dogfight》的实现。专家数据集、训练好的模型以及策略的演示视频可在[Google Drive](https://drive.google.com/drive/folders/1lAllxmsy0MhW714ZmT8fb0MkdJktUxzJ?usp=sharing)获取。
+本项目是论文[《An Imitative Reinforcement Learning Framework for Autonomous Dogfight》](https://arxiv.org/abs/2406.11562)的实现。专家数据集、训练好的模型以及策略的演示视频可在[Google Drive](https://drive.google.com/drive/folders/1lAllxmsy0MhW714ZmT8fb0MkdJktUxzJ?usp=sharing)获取。
 
 ## 配置
 
@@ -14,7 +14,7 @@
 
 ### HIRL
 
-```shell
+```bash
 conda create -n hirl python=3.8
 conda activate hirl
 git clone https://github.com/zrc0622/HIRL4UCAV.git
@@ -31,7 +31,7 @@ pip install -e .
 ### 运行实验
 完成准备工作后，可通过以下命令启动训练：
 
-```shell
+```bash
 python hirl/train_all.py --port=<ENV_PORT> --env=<ENV_TYPE> --random --agent=HIRL --type=<HIRL_TYPE> --model_name=<MODEL_NAME>
 ```
 
@@ -57,7 +57,7 @@ python hirl/train_all.py --port=<ENV_PORT> --env=<ENV_TYPE> --random --agent=HIR
 </div>
 
 ## 引用
-```
+```bibtex
 @misc{li2024imitative,
     title={An Imitative Reinforcement Learning Framework for Autonomous Dogfight}, 
     author={Siyuan Li and Rongchang Zuo and Peng Liu and Yingnan Zhao},
