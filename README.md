@@ -33,7 +33,7 @@ Update the IP address in the `local_config.yaml` file.
 ### Run Experiments
 Once the prerequisites are set, you can run experiments using the following command:
 
-```python
+```shell
 python hirl/train_all.py --port=<ENV_PORT> --env=<ENV_TYPE> --random --agent=HIRL --type=<HIRL_TYPE> --model_name=<MODEL_NAME>
 ```
 
