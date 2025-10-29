@@ -2,7 +2,7 @@
 
 <h1 align='center'> 基于高模仿性强化学习的无人机空战 </h1>
 
-本项目是论文[《An Imitative Reinforcement Learning Framework for Pursuit-Lock-Launch Missions》](https://arxiv.org/abs/2406.11562)的实现。专家数据集、训练好的模型以及策略的演示视频可在[Google Drive](https://drive.google.com/drive/folders/1lAllxmsy0MhW714ZmT8fb0MkdJktUxzJ?usp=sharing)获取。
+本项目是论文[《An Imitative Reinforcement Learning Framework for Pursuit-Lock-Launch Missions》](https://arxiv.org/abs/2406.11562)的实现。专家数据集、训练好的模型以及策略的演示视频可在 [Google Drive](https://drive.google.com/drive/folders/1lAllxmsy0MhW714ZmT8fb0MkdJktUxzJ?usp=sharing) 获取。
 
 ## 配置
 
@@ -26,14 +26,14 @@ pip install -e .
 ## 使用说明
 
 ### 准备工作
-从[Google Drive](https://drive.google.com/drive/folders/1lAllxmsy0MhW714ZmT8fb0MkdJktUxzJ?usp=sharing)下载`expert_data`和`bc_actor`文件夹并放置于项目根目录，然后更新`local_config.yaml`文件中的IP地址配置。
+从 [Google Drive](https://drive.google.com/drive/folders/1lAllxmsy0MhW714ZmT8fb0MkdJktUxzJ?usp=sharing) 下载 `expert_data` 和 `bc_actor` 文件夹并放置于项目根目录，然后更新 `local_config.yaml` 文件中的IP地址配置。
 
 ### 运行实验
 完成准备工作后，请按照以下步骤运行实验：
 
-1. **启动环境：**运行 Dogfight Sandbox 并选择 NETWORK MODE 模式
+1. **启动环境**：运行 Dogfight Sandbox 并选择 NETWORK MODE 模式
 
-2. **开始训练：**环境启动后，使用以下命令运行实验：
+2. **开始训练**：环境启动后，使用以下命令运行实验：
     ```bash
     python hirl/train_all.py --port=<ENV_PORT> --env=<ENV_TYPE> --random --agent=HIRL --type=<HIRL_TYPE> --model_name=<MODEL_NAME>
     ```

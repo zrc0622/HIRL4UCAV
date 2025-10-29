@@ -32,9 +32,9 @@ Download the `expert_data` and `bc_actor` folders from [Google Drive](https://dr
 ### Run Experiments
 Once the prerequisites are set, follow these steps to run experiments:
 
-1. **Start the Environment:** Run the Dogfight Sandbox and choose the NETWORK MODE mission
+1. **Start the Environment**: Run the Dogfight Sandbox and choose the NETWORK MODE mission
 
-2. **Start Training:** With the environment running, execute the following command to run the experiments:
+2. **Start Training**: With the environment running, execute the following command to run the experiments:
     ```bash
     python hirl/train_all.py --port=<ENV_PORT> --env=<ENV_TYPE> --random --agent=HIRL --type=<HIRL_TYPE> --model_name=<MODEL_NAME>
     ```
