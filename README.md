@@ -2,7 +2,7 @@
 
 <h1 align='center'> Highly Imitative Reinforcement Learning for UCAV </h1>
 
-This is the implementation of [*An Imitative Reinforcement Learning Framework for Autonomous Dogfight*](https://arxiv.org/abs/2406.11562).
+This is the implementation of [*An Imitative Reinforcement Learning Framework for Pursuit-Lock-Launch Missions*](https://arxiv.org/abs/2406.11562).
 The expert dataset, the trained models, and recorded videos of the learned policies are available at [Google Drive](https://drive.google.com/drive/folders/1lAllxmsy0MhW714ZmT8fb0MkdJktUxzJ?usp=sharing).
 
 ## Installation
@@ -30,11 +30,14 @@ pip install -e .
 Download the `expert_data` and `bc_actor` folders from [Google Drive](https://drive.google.com/drive/folders/1lAllxmsy0MhW714ZmT8fb0MkdJktUxzJ?usp=sharing) and place them in the repository, then update the IP address in the `local_config.yaml` file.
 
 ### Run Experiments
-Once the prerequisites are set, you can run experiments using the following command:
+Once the prerequisites are set, follow these steps to run experiments:
 
-```bash
-python hirl/train_all.py --port=<ENV_PORT> --env=<ENV_TYPE> --random --agent=HIRL --type=<HIRL_TYPE> --model_name=<MODEL_NAME>
-```
+1. **Start the Environment:** Run the Dogfight Sandbox and choose the NETWORK MODE mission
+
+2. **Start Training:** With the environment running, execute the following command to run the experiments:
+    ```bash
+    python hirl/train_all.py --port=<ENV_PORT> --env=<ENV_TYPE> --random --agent=HIRL --type=<HIRL_TYPE> --model_name=<MODEL_NAME>
+    ```
 
 Replace placeholders with your specific setup.
 
@@ -60,11 +63,13 @@ Replace placeholders with your specific setup.
 ## Citation
 
 ```bibtex
-@misc{li2024imitative,
-    title={An Imitative Reinforcement Learning Framework for Autonomous Dogfight}, 
-    author={Siyuan Li and Rongchang Zuo and Peng Liu and Yingnan Zhao},
-    year={2024},
-    eprint={2406.11562},
-    archivePrefix={arXiv}
+@misc{li2025imitativereinforcementlearningframework,
+      title={An Imitative Reinforcement Learning Framework for Pursuit-Lock-Launch Missions}, 
+      author={Siyuan Li and Rongchang Zuo and Bofei Liu and Yaoyu He and Peng Liu and Yingnan Zhao},
+      year={2025},
+      eprint={2406.11562},
+      archivePrefix={arXiv},
+      primaryClass={cs.LG},
+      url={https://arxiv.org/abs/2406.11562}, 
 }
 ```

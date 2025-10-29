@@ -100,7 +100,7 @@ def main(config):
 
     if not renderless:
         print('rendering mode')
-        step_scale = 10
+        step_scale = 8
     else:
         print('no rendering mode')
         step_scale = 1

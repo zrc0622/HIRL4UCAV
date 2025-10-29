@@ -2,13 +2,13 @@
 
 <h1 align='center'> 基于高模仿性强化学习的无人机空战 </h1>
 
-本项目是论文[《An Imitative Reinforcement Learning Framework for Autonomous Dogfight》](https://arxiv.org/abs/2406.11562)的实现。专家数据集、训练好的模型以及策略的演示视频可在[Google Drive](https://drive.google.com/drive/folders/1lAllxmsy0MhW714ZmT8fb0MkdJktUxzJ?usp=sharing)获取。
+本项目是论文[《An Imitative Reinforcement Learning Framework for Pursuit-Lock-Launch Missions》](https://arxiv.org/abs/2406.11562)的实现。专家数据集、训练好的模型以及策略的演示视频可在[Google Drive](https://drive.google.com/drive/folders/1lAllxmsy0MhW714ZmT8fb0MkdJktUxzJ?usp=sharing)获取。
 
 ## 配置
 
 ### 环境依赖
 
-请按照[官方说明](https://github.com/harfang3d/dogfight-sandbox-hg2)安装Dogfight Sandbox。
+请按照[官方说明](https://github.com/harfang3d/dogfight-sandbox-hg2)安装 Dogfight Sandbox。
 
 <!-- Alternatively, installation can also be done directly from one of the following links: [Link 1](https://github.com/harfang3d/dogfight-sandbox-hg2/releases/download/v1.3.1/dogfight-sandbox-hg2.zip) or [Link 2](https://drive.google.com/file/d/1FihtrwnwGt0FXaVlGS4881yN3oYpbdlw/view?usp=drive_link). -->
 
@@ -29,11 +29,14 @@ pip install -e .
 从[Google Drive](https://drive.google.com/drive/folders/1lAllxmsy0MhW714ZmT8fb0MkdJktUxzJ?usp=sharing)下载`expert_data`和`bc_actor`文件夹并放置于项目根目录，然后更新`local_config.yaml`文件中的IP地址配置。
 
 ### 运行实验
-完成准备工作后，可通过以下命令启动训练：
+完成准备工作后，请按照以下步骤运行实验：
 
-```bash
-python hirl/train_all.py --port=<ENV_PORT> --env=<ENV_TYPE> --random --agent=HIRL --type=<HIRL_TYPE> --model_name=<MODEL_NAME>
-```
+1. **启动环境：**运行 Dogfight Sandbox 并选择 NETWORK MODE 模式
+
+2. **开始训练：**环境启动后，使用以下命令运行实验：
+    ```bash
+    python hirl/train_all.py --port=<ENV_PORT> --env=<ENV_TYPE> --random --agent=HIRL --type=<HIRL_TYPE> --model_name=<MODEL_NAME>
+    ```
 
 请根据实际需求替换相应参数。
 
@@ -58,11 +61,13 @@ python hirl/train_all.py --port=<ENV_PORT> --env=<ENV_TYPE> --random --agent=HIR
 
 ## 引用
 ```bibtex
-@misc{li2024imitative,
-    title={An Imitative Reinforcement Learning Framework for Autonomous Dogfight}, 
-    author={Siyuan Li and Rongchang Zuo and Peng Liu and Yingnan Zhao},
-    year={2024},
-    eprint={2406.11562},
-    archivePrefix={arXiv}
+@misc{li2025imitativereinforcementlearningframework,
+      title={An Imitative Reinforcement Learning Framework for Pursuit-Lock-Launch Missions}, 
+      author={Siyuan Li and Rongchang Zuo and Bofei Liu and Yaoyu He and Peng Liu and Yingnan Zhao},
+      year={2025},
+      eprint={2406.11562},
+      archivePrefix={arXiv},
+      primaryClass={cs.LG},
+      url={https://arxiv.org/abs/2406.11562}, 
 }
 ```
