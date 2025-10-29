@@ -6,7 +6,7 @@
 
 ## 配置
 
-### 环境依赖
+### 环境
 
 请按照[官方说明](https://github.com/harfang3d/dogfight-sandbox-hg2)安装 Dogfight Sandbox。
 
