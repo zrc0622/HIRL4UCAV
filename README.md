@@ -27,8 +27,7 @@ pip install -e .
 ## Usage
 
 ### Prerequisites
-Download the `expert_data` and `bc_actor` folders from [Google Drive](https://drive.google.com/drive/folders/1lAllxmsy0MhW714ZmT8fb0MkdJktUxzJ?usp=sharing) and place them in the repository. 
-Update the IP address in the `local_config.yaml` file.
+Download the `expert_data` and `bc_actor` folders from [Google Drive](https://drive.google.com/drive/folders/1lAllxmsy0MhW714ZmT8fb0MkdJktUxzJ?usp=sharing) and place them in the repository, then update the IP address in the `local_config.yaml` file.
 
 ### Run Experiments
 Once the prerequisites are set, you can run experiments using the following command:

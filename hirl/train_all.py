@@ -117,7 +117,7 @@ def main(config):
     hirl_type = config.type
     bc_weight = config.bc_weight
     load_model = config.load_model
-    render = not (config.render)
+    renderless = not (config.render)
     plot = config.plot
     env_type = config.env
     
@@ -133,10 +133,12 @@ def main(config):
     else:
         print("no seed is set")
 
-    if not render:
+    if not renderless:
         print('rendering mode')
+        step_scale = 10
     else:
         print('no rendering mode')
+        step_scale = 1
 
     with open('local_config.yaml', 'r') as file:
         local_config = yaml.safe_load(file)
@@ -157,8 +159,8 @@ def main(config):
         trainingEpisodes = 6000
         validationEpisodes = 50 # 20
         explorationEpisodes = 20 # 200
-        maxStep = 1500 # 6000
-        validationStep = 1500 # 6000
+        maxStep = 1500 * step_scale # 6000
+        validationStep = 1500 * step_scale  # 6000
         
         env = HarfangEnv()
 
@@ -167,8 +169,8 @@ def main(config):
         trainingEpisodes = 6000
         validationEpisodes = 50 # 20
         explorationEpisodes = 20 # 200
-        maxStep = 1500 # 6000
-        validationStep = 1500 # 6000
+        maxStep = 1500 * step_scale  # 6000
+        validationStep = 1500 * step_scale  # 6000
             
         env = HarfangSerpentineEnv()
 
@@ -177,12 +179,12 @@ def main(config):
         trainingEpisodes = 6000
         validationEpisodes = 50 # 20
         explorationEpisodes = 20 # 200
-        maxStep = 1900 # 6000
-        validationStep = 1900 # 6000
+        maxStep = 1900 * step_scale  # 6000
+        validationStep = 1900 * step_scale  # 6000
             
         env = HarfangCircularEnv()
 
-    df.set_renderless_mode(render)
+    df.set_renderless_mode(renderless)
     df.set_client_update_mode(True)
 
     bufferSize = 10**5 # 10**6

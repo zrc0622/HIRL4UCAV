@@ -26,7 +26,7 @@ pip install -e .
 ## 使用说明
 
 ### 准备工作
-从[Google Drive](https://drive.google.com/drive/folders/1lAllxmsy0MhW714ZmT8fb0MkdJktUxzJ?usp=sharing)下载`expert_data`和`bc_actor`文件夹并放置于项目根目录。更新`local_config.yaml`文件中的IP地址配置。
+从[Google Drive](https://drive.google.com/drive/folders/1lAllxmsy0MhW714ZmT8fb0MkdJktUxzJ?usp=sharing)下载`expert_data`和`bc_actor`文件夹并放置于项目根目录，然后更新`local_config.yaml`文件中的IP地址配置。
 
 ### 运行实验
 完成准备工作后，可通过以下命令启动训练：
